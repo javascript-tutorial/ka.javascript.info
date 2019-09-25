@@ -1,45 +1,45 @@
-# Code editors
+# Code - ედიტორები
 
-A code editor is the place where programmers spend most of their time.
+Code - ედიტორი არის ადგილი, სადაც პროგრამისტები ატარებენ ყველაზე მეტ დროს.
 
-There are two main types of code editors: IDEs and lightweight editors. Many people use one tool of each type.
+არსებობს ორი მთავარი სახის code - ედიტორები : IDEs და lightweigh. ბევრი იყენებს თითოეული მათგანიდან ერთ-ერთს.
 
 ## IDE
 
-The term [IDE](https://en.wikipedia.org/wiki/Integrated_development_environment) (Integrated Development Environment) refers to a powerful editor with many features that usually operates on a "whole project." As the name suggests, it's not just an editor, but a full-scale "development environment."
+ტერმინი [IDE](https://en.wikipedia.org/wiki/Integrated_development_environment) (Integrated Development Environment) უკავშირდება ძლიერ ედიტორს მრავალი ფუნქციით, რომელიც როგორც წესი მუშაობს  "მთელს პროექტზე." როგორც სახელი გვეუბნება, ის არ არის მხოლოდ ედიტორი, არამედ but a ფართო მაშტაბიანი "development გარემო."
 
-An IDE loads the project (which can be many files), allows navigation between files, provides autocompletion based on the whole project (not just the open file), and integrates with a version management system (like [git](https://git-scm.com/)), a testing environment, and other "project-level" stuff.
+IDE ტვირთავს პროექტს (რომელიც შესაძლოა იყოს უამრავი ფაილი), გვაძლევს ფაილებს შორის ნავიგაციის საშუალებას, უზრუნველყოფს ავტომატურ დასრულებას(autocompletion) მთელს პროექტზე დაყრდნობით (და არა მხოლოდ გახსნილი ფაილის), ასევე შეუძლია ინტეგრაცია ვერსიების კონტროლის საშუალებებთან (როგორიც არის [git](https://git-scm.com/)), სატესტო გარემო და სხვა "project-level" ამბები.
 
-If you haven't selected an IDE yet, consider the following options:
+თუ ჯერ არ ამოგირჩევიათ რომელიმე IDE ,  განიხილეთ შემდეგი ვარიანტები:
 
-- [Visual Studio Code](https://code.visualstudio.com/) (cross-platform, free).
-- [WebStorm](http://www.jetbrains.com/webstorm/) (cross-platform, paid).
+- [Visual Studio Code](https://code.visualstudio.com/) (cross-platform, უფასო).
+- [WebStorm](http://www.jetbrains.com/webstorm/) (cross-platform, ფასიანი).
 
-For Windows, there's also "Visual Studio", not to be confused with "Visual Studio Code". "Visual Studio" is a paid and mighty Windows-only editor, well-suited for the .NET platform. It's also good at JavaScript. There's also a free version [Visual Studio Community](https://www.visualstudio.com/vs/community/).
+ვინდოუსისთვის არის ასევე "Visual Studio", არ უნდა აგვერიოს "Visual Studio Code". "Visual Studio" არის ფასიანი და შესაძლოა მხოლოდ ვინდოუსის ედიტორი, კარგად ერგება .NET პლატფორმას. ასევე კარგია JavaScript - შიც. არსებობს ასევე უფასო ვერსია [Visual Studio Community](https://www.visualstudio.com/vs/community/).
 
-Many IDEs are paid, but have a trial period. Their cost is usually negligible compared to a qualified developer's salary, so just choose the best one for you.
+ბევრი IDE არის ფასიანი, მაგრამ აქვთ თავიანთი საცდელი ფერიოდიც. მათი ფასი არის ხშირად უმნიშვნელო გამოცდილი დეველოპერის ანაზღაურებასთან შედარებით, ასე რომ უბრალოდ ამოარჩიეთ თქვენთვის საუკეთესო.
 
 ## Lightweight editors
 
-"Lightweight editors" are not as powerful as IDEs, but they're fast, elegant and simple.
+"Lightweight editors" არ არიან ისეთი ძლევამოსილი, როგორიც  IDE - ები, მაგრამ ისინი არიან სწრაფი, ელეგანტური და მარტივი.
 
-They are mainly used to open and edit a file instantly.
+ისინი ძირითადად გამოიყენება, რაიმე ფაილის გასახსნელად და მასში სწრაფი ცვლილებებისთვის.
 
-The main difference between a "lightweight editor" and an "IDE" is that an IDE works on a project-level, so it loads much more data on start, analyzes the project structure if needed and so on. A lightweight editor is much faster if we need only one file.
+მთავარი განსხვავება "lightweight editor" - ს და   "IDE" -ს შორის არის ის რომ  IDE მუშაობს პროექტის დონეზე, ანუ ის ტვირთავს ბევრად მეტ მონაცემს დაწყებისას, აანალიზებს პროექტის სტრუქტურას, თუ საჭიროა და ა.შ. lightweight editor არის ბევრად უფრო სწრაფი, როდესაც ჩვენ გვჭირდება მხოლოდ ერთი ფაილი.
 
-In practice, lightweight editors may have a lot of plugins including directory-level syntax analyzers and autocompleters, so there's no strict border between a lightweight editor and an IDE.
+თუმცა პრაქტიკაში lightweight editor - ებს შეიძლება ჰქონდეთ უამრავი მოდული, მათ შორის დირექტორიის დონეზე ანალიზატორი და ავტოკომპლექტორები. ასე რომ არ არსებობს მკაცრი საზღვარი "lightweight editor" - ს და   "IDE" -ს შორის.
 
-The following options deserve your attention:
+შემდეგი პარამეტრები იმსახურებს ჩვენს ყურადღებას:
 
-- [Atom](https://atom.io/) (cross-platform, free).
-- [Sublime Text](http://www.sublimetext.com) (cross-platform, shareware).
-- [Notepad++](https://notepad-plus-plus.org/) (Windows, free).
-- [Vim](http://www.vim.org/) and [Emacs](https://www.gnu.org/software/emacs/) are also cool if you know how to use them.
+- [Atom](https://atom.io/) (ჯვარედინი პლატფორმა, უფასო).
+- [Sublime Text](http://www.sublimetext.com) (ჯვარედინი პლატფორმა, საცდელი უფასო ვერსიით).
+- [Notepad++](https://notepad-plus-plus.org/) (ვინდოუსი, უფასო).
+- [Vim](http://www.vim.org/) და [Emacs](https://www.gnu.org/software/emacs/) არის ასევე ძალიან მაგარი თუ იცით თუ როგორ გამოიყენოთ ისინი.
 
-## Let's not argue
+## ნუ ვიკამათებთ
 
-The editors in the lists above are those that either I or my friends whom I consider good developers have been using for a long time and are happy with.
+ზემოთ ჩამოთვლილი ედიტორები არის ის ედიტორები, რომლებსაც ან მე ან ჩემი მეგობრები, რომლებსაც ვთვლი რომ კარგი დეველოპერები არიან ვიყენებთ უკვე დიდი ხანია და ვართ კმაყოფილი მათი მუშაობით.
 
-There are other great editors in our big world. Please choose the one you like the most.
+არსებობს სხვა ბევრი კარგი ედიტორი ჩვენს დიდ სამყაროში, ასე რომ გთხოვთ ამოარჩიოთ, რომელიც ყველაზე მეტად მოგეწონებათ.
 
-The choice of an editor, like any other tool, is individual and depends on your projects, habits, and personal preferences.
+ედიტორის ამორჩევა, ისევე როგორც ნებისმიერი ხელსაწყოსი არის ინდივიდუალური და დამოკიდებულია თქვენს პროექტზე, ჩვევენზე და პირად დამოკიდებულებებზე.
