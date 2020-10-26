@@ -1,6 +1,10 @@
 # The Modern JavaScript Tutorial in Georgian
 
+<<<<<<< HEAD
 This repository hosts the translation of <https://javascript.info> in Georgian.
+=======
+This repository hosts the English content of the Modern JavaScript Tutorial, published in [https://javascript.info](https://javascript.info).
+>>>>>>> 2d5be7b7307b0a4a85e872d229e0cebd2d8563b5
 
 
 **That's how you can contribute:**
@@ -92,7 +96,13 @@ In that case it's probably easier not to translate such text. See more about tra
 
 ### External Links
 
+<<<<<<< HEAD
 If an external link is to Wikipedia, e.g. `https://en.wikipedia.org/wiki/JavaScript`, and a version of that article exists in your language that is of decent quality, link to that version instead.
+=======
+  - `index.md` stands for a chapter
+  - `article.md` stands for an article
+  - `task.md` stands for a task (solution must be provided in `solution.md` file as well)
+>>>>>>> 2d5be7b7307b0a4a85e872d229e0cebd2d8563b5
 
 Example:
 
