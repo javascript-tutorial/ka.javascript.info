@@ -44,7 +44,6 @@ function clockStart() { // run the clock
     timerId = setInterval(update, 1000);
   }
   update(); // (*)
-}
 
 function clockStop() {
   clearInterval(timerId);
