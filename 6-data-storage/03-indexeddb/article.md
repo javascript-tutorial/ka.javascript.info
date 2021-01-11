@@ -34,7 +34,7 @@ let openRequest = indexedDB.open(name, version);
 We can have many databases with different names, but all of them exist within the current origin (domain/protocol/port). Different websites can't access each other's databases.
 
 The call returns `openRequest` object, we should listen to events on it:
-- `success`: database is ready, there's the "database object" in `openRequest.result`, that we should use it for further calls.
+- `success`: database is ready, there's the "database object" in `openRequest.result`, we should use it for further calls.
 - `error`: opening failed.
 - `upgradeneeded`: database is ready, but its version is outdated (see below).
 
@@ -117,7 +117,7 @@ Let's say:
 2. Then we rolled out an update, so our code is newer.
 3. And then the same visitor opens our site in another tab.
 
-So there's a tab with an open connection to DB version `1`, while the second tab one attempts to update it to version `2` in its `upgradeneeded` handler.
+So there's a tab with an open connection to DB version `1`, while the second one attempts to update it to version `2` in its `upgradeneeded` handler.
 
 The problem is that a database is shared between two tabs, as it's the same site, same origin. And it can't be both version `1` and `2`. To perform the update to version `2`, all connections to version 1 must be closed, including the one in the first tab.
 
@@ -153,7 +153,7 @@ openRequest.onblocked = function() {
   // this event shouldn't trigger if we handle onversionchange correctly
 
   // it means that there's another open connection to same database
-  // and it wasn't closed after db.onversionchange triggered for them
+  // and it wasn't closed after db.onversionchange triggered for it
 };
 */!*
 ```
@@ -551,7 +551,7 @@ openRequest.onupgradeneeded = function() {
   // we must create the index here, in versionchange transaction
   let books = db.createObjectStore('books', {keyPath: 'id'});
 *!*
-  let index = inventory.createIndex('price_idx', 'price');
+  let index = books.createIndex('price_idx', 'price');
 */!*
 };
 ```
@@ -687,7 +687,7 @@ Whether there are more values matching the cursor or not -- `onsuccess` gets cal
 
 In the example above the cursor was made for the object store.
 
-But we also can make a cursor over an index. As we remember, indexes allow to search by an object field. Cursors over indexes to precisely the same as over object stores -- they save memory by returning one value at a time.
+But we also can make a cursor over an index. As we remember, indexes allow to search by an object field. Cursors over indexes do precisely the same as over object stores -- they save memory by returning one value at a time.
 
 For cursors over indexes, `cursor.key` is the index key (e.g. price), and we should use `cursor.primaryKey` property for the object key:
 
@@ -698,7 +698,7 @@ let request = priceIdx.openCursor(IDBKeyRange.upperBound(5));
 request.onsuccess = function() {
   let cursor = request.result;
   if (cursor) {
-    let key = cursor.primaryKey; // next object store key (id field)
+    let primaryKey = cursor.primaryKey; // next object store key (id field)
     let value = cursor.value; // next object store object (book object)
     let key = cursor.key; // next index key (price)
     console.log(key, value);
@@ -718,7 +718,7 @@ Let's use a thin promise wrapper <https://github.com/jakearchibald/idb> further 
 Then, instead of `onsuccess/onerror` we can write like this:
 
 ```js
-let db = await idb.openDb('store', 1, db => {
+let db = await idb.openDB('store', 1, db => {
   if (db.oldVersion == 0) {
     // perform the initialization
     db.createObjectStore('books', {keyPath: 'id'});
@@ -809,7 +809,7 @@ let result = await promise; // if still needed
 
 IndexedDB can be thought of as a "localStorage on steroids". It's a simple key-value database, powerful enough for offline apps, yet simple to use.
 
-The best manual is the specification, [the current one](https://w3c.github.io/IndexedDB) is 2.0, but few methods from [3.0](https://w3c.github.io/IndexedDB/) (it's not much different) are partially supported.
+The best manual is the specification, [the current one](https://www.w3.org/TR/IndexedDB-2/) is 2.0, but few methods from [3.0](https://w3c.github.io/IndexedDB/) (it's not much different) are partially supported.
 
 The basic usage can be described with a few phrases:
 
