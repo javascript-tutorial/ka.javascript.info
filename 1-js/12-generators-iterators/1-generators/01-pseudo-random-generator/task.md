@@ -1,29 +1,29 @@
 
-# Pseudo-random generator
+# ფსეუდო-რანდომ გენერატორი
 
-There are many areas where we need random data.
+ბევრ სფეროში გვჭირდება რანდომ მონაცემი.
 
-One of them is testing. We may need random data: text, numbers, etc. to test things out well.
+მათ შორის ერთ-ერთია ტესტირება. ჩვენ დასატესტად შეიძლება დაგვჭირდეს რანდომ მონაცემი: ტექსტი, რიცხვები, და ა.შ.
 
-In JavaScript, we could use `Math.random()`. But if something goes wrong, we'd like to be able to repeat the test, using exactly the same data.
+ჯავასკრიპტში, შეგვიძლია გამოვიყენოთ `Math.random()`. მაგრამ თუ რამე შეცდომა მოხდა, გვინდა რომ ტესტი გავიმეოროთ იმავე მონაცემებით.
 
-For that, so called "seeded pseudo-random generators" are used. They take a "seed", the first value, and then generate the next ones using a formula so that the same seed yields the same sequence, and hence the whole flow is easily reproducible. We only need to remember the seed to repeat it.
+ამისათვის, "seeded pseudo-random გენერატორები" გამოიყენება. ისინი იღევენ "seed"-ს, პირველ მნიშვნელობას და დანარჩენებს აგენერირებენ ფორმულით, და შესაბამისად, იგივე "seed" ყოველ ჯერზე იმავე მიმდევრობას დააბრუნებს. ტესტის გასამეორებლად მხოლოდ "seed"-ის დამახსოვრებაა საჭირო.
 
-An example of such formula, that generates somewhat uniformly distributed values:
+ამდაგვარი ფორმულის, რომელიც ასე თუ ისე თანაბრად განაწილებულ მნიშვნელობებს აგენერირებს, მაგალითია:
 
 ```
 next = previous * 16807 % 2147483647
 ```
 
-If we use `1` as the seed, the values will be:
+თუ გამოვიყენებთ `1`-ს როგორც "seed"-ს, მაშინ მნიშვნელობები იქნება:
 1. `16807`
 2. `282475249`
 3. `1622650073`
-4. ...and so on...
+4. ...და ასე შემდეგ...
 
-The task is to create a generator function `pseudoRandom(seed)` that takes `seed` and creates the generator with this formula.
+ჩვენი დავალებაა შევქმნათ გენერატორი ფუნქცია `pseudoRandom(seed)` რომელიც არგუმენტად იღებს `seed`-ს და ზემო ფორმულით ქმნის გენერატორს.
 
-Usage example:
+გამოყენების მაგალითი:
 
 ```js
 let generator = pseudoRandom(1);
