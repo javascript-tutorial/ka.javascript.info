@@ -1,15 +1,15 @@
 
-# Async iteration and generators
+# ასინქრონული იტერაცია და გენერატორები
 
-Asynchronous iteration allow us to iterate over data that comes asynchronously, on-demand. Like, for instance, when we download something chunk-by-chunk over a network. And asynchronous generators make it even more convenient.
+ასინქრონული იტერაცია საშუალებას გვაძლევს გადავუყვეთ ასინქრონულად მიღებულ მონაცემს. მაგალითად, როდესაც ქსელიდან ნაწილ-ნაწილ ვიწერთ რაიმეს. ასინქრონული გენერატორები ამ ყველაფერს იმპლემენტაციას უფრო კომფორტულს ხდის.
 
-Let's see a simple example first, to grasp the syntax, and then review a real-life use case.
+მოდი ჯერ მარტივი მაგალითი ვნახოთ, გავიგოთ სინტაქსი როგორია და შემდეგ რეალური მაგალითი განვიხილოთ.
 
-## Recall iterables
+## გავიხსენოთ იტერატორები
 
-Let's recall the topic about iterables. 
+მოდი გავიხსენოთ იტერატორების თავი.
 
-The idea is that we have an object, such as `range` here:
+ანუ გვაქვს ობიექტი, როგირიცაა `range`:
 ```js
 let range = {
   from: 1,
@@ -17,17 +17,17 @@ let range = {
 };
 ```
 
-...And we'd like to use `for..of` loop on it, such as `for(value of range)`, to get values from `1` to `5`.
+...და გვინდა გამოვიყენოთ `for..of` ციკლი, როგორიცაა `for(value of range)`, რომ დავითრიოთ მნიშვნელობები `1`-დან `5`-მდე.
 
-In other words, we want to add an *iteration ability* to the object.
+სხვა სიტყვებით, ჩვენ გვინდა *იტერაციის უნარი* დავუმატოთ ობიექტს.
 
-That can be implemented using a special method with the name `Symbol.iterator`:
+ამის მისაღწევად საჭიროა სპეციალური მეთოდის გამოყენება `Symbol.iterator`:
 
-- This method is called in by the `for..of` construct when the loop is started, and it should return an object with the `next` method.
-- For each iteration, the `next()` method is invoked for the next value.
-- The `next()` should return a value in the form `{done: true/false, value:<loop value>}`, where `done:true` means the end of the loop.
+- ამ მეთოდს გამოიძახებს `for..of` ციკლის დასაწყისში გამოიძახებს, და მან უნდა დააბრუნოს ობიექტი `next` მეთოდით.
+- ყოველ იტერაციაზე, `next()` მეთოდი შემდეგი მნიშვნელობის მისაღებად გამოიძახება.
+- `next()`-მდა უნდა დააბრუნოს მნიშვნელობა ფორმით `{done: true/false, value:<ციკლის მნიშვნელობა>}`, სადაც `done:true` ციკლის დასასრულს ნიშნავს.
 
-Here's an implementation for the iterable `range`:
+ქვემოთ მოცემულია იტერირებადი `range`-ის იმპლემენტაცია:
 
 ```js run
 let range = {
@@ -35,14 +35,14 @@ let range = {
   to: 5,
 
 *!*
-  [Symbol.iterator]() { // called once, in the beginning of for..of
+  [Symbol.iterator]() { // გამოიძახება მხოლოდ ერთხელ, for..of-ის დასაწყისში
 */!*
     return {
       current: this.from,
       last: this.to,
 
 *!*
-      next() { // called every iteration, to get the next value
+      next() { // გამოიძახება ყოველ იტერაციაზე შემდეგი მნიშვნელობის დასათრევად
 */!*
         if (this.current <= this.last) {
           return { done: false, value: this.current++ };
@@ -59,25 +59,25 @@ for(let value of range) {
 }
 ```
 
-If anything is unclear, please visit the chapter [](info:iterable), it gives all the details about regular iterables.
+თუ რამე გაუგებარია, ეწვიეთ თავს [იტერატორები](info:iterable), ჩვეულებრივ იტერატორებზე ინფორმაციის მისაღებად.
 
-## Async iterables
+## ასინქრონული იტერატორები
 
-Asynchronous iteration is needed when values come asynchronously: after `setTimeout` or another kind of delay. 
+ასინქრონული იტერაცია საჭიროა როდესაც მნიშვნელობებს ასინქრონულად ვიღებთ: `setTimeout`-ის ან მაგდაგვარი შემფერხებლის შემდეგ.
 
-The most common case is that the object needs to make a network request to deliver the next value, we'll see a real-life example of it a bit later.
+ყველაზე ხშირი შემთხვევაა როდესაც ობიექტი ქსელს რექუესთს გაუგზავნის რომ შემდეგი მნიშვნელობა მიიღოს, ცოტა ხანში რეალურ მაგალითსაც განვიხილავთ.
 
-To make an object iterable asynchronously:
+იმისათვის რომ ობიექტი ასინქრონულად იტერირებადი ვაქციოთ, უნდა:
 
-1. Use `Symbol.asyncIterator` instead of `Symbol.iterator`.
-2. The `next()` method should return a promise (to be fulfilled with the next value).
-    - The `async` keyword handles it, we can simply make `async next()`.
-3. To iterate over such an object, we should use a `for await (let item of iterable)` loop.
-    - Note the `await` word.
+1. გამოვიყენოთ `Symbol.asyncIterator` `Symbol.iterator`-ის მაგივრად.
+2. `next()` მეთოდმა უნდა დააბრუნოს "დაპირება" (promise, და მეც "ფრომისს" გამოვიყენებ), რათა შემდეგი მნიშვნელობით შეივსოს.
+    - `async` ქივორდი მიხედავს ამ სიტუაციას, შეგვიძლია პირდაპირ `async next()` გამოვიყენოთ.
+3. ასეთ ობიექტს რომ გადავუყვეთ, უნდა გამოვიყენოთ `for await (let item of iterable)` ციკლი.
+    - ყურადღება მიაქციეთ `await` სიტყვას.
 
-As a starting example, let's make an iterable `range` object, similar like the one before, but now it will return values asynchronously, one per second.
+მოდი დასაწყისისთვის შევქმნათ წინა `range`-ის მაგვარი ობიექტი, მაგრამ ამჯერაც ის დააბრუნებტს ასინქრონულ მნიშვნელობებს ყოველ ერთ წამში.
 
-All we need to do is to perform a few replacements in the code above:
+მხოლო რამდენიმე ცვლილების შეტანა მოგვიწევს.
 
 ```js run
 let range = {
@@ -96,7 +96,7 @@ let range = {
 */!*
 
 *!*
-        // note: we can use "await" inside the async next:
+        // დააკვირდით, ჩვენ შეგვიძლია "await" გამოვიყენოთ async next-ში:
         await new Promise(resolve => setTimeout(resolve, 1000)); // (3)
 */!*
 
@@ -121,32 +121,33 @@ let range = {
 })()
 ```
 
-As we can see, the structure is similar to regular iterators:
+როგორცე ხედავთ, იგივე სტრუქტურა აქვს როგორც ჩვეულებრივ იტერატორს:
 
-1. To make an object asynchronously iterable, it must have a method `Symbol.asyncIterator` `(1)`.
-2. This method must return the object with `next()` method returning a promise `(2)`.
-3. The `next()` method doesn't have to be `async`, it may be a regular method returning a promise, but `async` allows us to use `await`, so that's convenient. Here we just delay for a second `(3)`.
-4. To iterate, we use `for await(let value of range)` `(4)`, namely add "await" after "for". It calls `range[Symbol.asyncIterator]()` once, and then its `next()` for values.
+1. იმისათვის რომ ობიექტი გავხადოთ ასინქრონულად იტერირებადი, მას უნდა ჰქონდეს მეთOდი `Symbol.asyncIterator` `(1)`.
+2. ამ მეთოდმა უნდა დააბრუნოს ობიექტი `async next()` მეთოდით `(2)`.
+3. `next()` მეთოდი არაა სავალდებულო იყოს `async`, ის შეიძლება იყოს ჩვეულებრივი მეთოდი რომელიც აბრუნებს ფრომისს, მაგრამ `async` საშუალებას გვაძლევს `await`-ის გამოყენებას და ამიტომ უფრო კომფორტულია. `(3)` აქ ჩვენ უბრალოდ 1 წამი ვაფერხებთ.
+4. იტერაციის ჩვენ ვიყენებთ `for await (let value of range)` `(4)`, არ დაგავიწყდეთ "await"-ის დამატება "for"-ის შემდეგ. ის იძახებს `range[Symbol.asyncIterator]()`-ს ერთხელ, და შემდეგ `next()`-ს მომდევნო მნიშვნელობებისთვის.
 
-Here's a small table with the differences:
+ქვემოთ ცხრილში მითითებულია განსხვავებები:
 
-|       | Iterators | Async iterators |
+|       | იტერატორები | ასინქრონული იტერატორები |
 |-------|-----------|-----------------|
-| Object method to provide iterator | `Symbol.iterator` | `Symbol.asyncIterator` |
-| `next()` return value is              | any value         | `Promise`  |
-| to loop, use                          | `for..of`         | `for await..of` |
+| ობიექტის მეთოდი იტერაციის გადასაცემად | `Symbol.iterator` | `Symbol.asyncIterator` |
+| `next()` რასაც აბრუნებს              | any value         | `Promise`  |
+| იტერაციისთვის გამოყენებული ციკლი                          | `for..of`         | `for await..of` |
 
-````warn header="The spread syntax `...` doesn't work asynchronously"
+````warn header="გაშლის ოპერატორს `...` ასინქრონულ სიტუაციაში ვერ გამოვიყენებთ"
 Features that require regular, synchronous iterators, don't work with asynchronous ones.
+სინქრონული იტერატორების თვისებებს ასინქრონულებთან ვერ გამოვიყენებთ.
 
-For instance, a spread syntax won't work:
+მაგალითად, გაშლი ოპერატორი არ იმუშავებს:
 ```js
 alert( [...range] ); // Error, no Symbol.iterator
 ```
 
-That's natural, as it expects to find `Symbol.iterator`, not `Symbol.asyncIterator`.
+ანუ ბუნებრივია, რადგან ის ცდილობს მოძებნოს `Symbol.iterator` და არა `Symbol.asyncIterator`. 
 
-It's also the case for `for..of`: the syntax without `await` needs `Symbol.iterator`.
+იგივე სიტუაციაა `for..of`-თვის: `await`-ის გარეშე მხოლოდ `Symbol.iterator`-თან შეგვიძლია გამოვიყენოთ.
 ````
 
 ## Recall generators
