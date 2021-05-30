@@ -364,7 +364,7 @@ async function* fetchCommits(repo) {
     - საწყისი URL არის `https://api.github.com/repos/<repo>/commits`, და შემდეგი გვერდი იქნება პასუხის `Link` ჰედერში.
     - `fetch` მეთოდი, თუ დაგვჭირდა, authorization-ისა და სხვა ჰედერების მითითების საშუალებას გვაძლევს -- ჩვენს შემთხვევაში Github მოითხოვს `User-Agent`-ს.
 2. კომიტები გვიბრუნდება JSON ფორმატში.
-3. შემდეგი გვერდის URL-ს `Link` ჰედერში ვგებულობთ. სპეციალურ ფორმატშია და ამიტომ მაგისთვის ვიყენებთ regular expression-ს (ამის შესახებ ვისწავლით თავში [Regular expressions](info:regular-expressions)).
+3. შემდეგი გვერდის URL-ს `Link` ჰედერში ვგებულობთ. სპეციალურ ფორმატშია და ამიტომ მაგისთვის ვიყენებთ regular expression-ს (ამას ვისწავლით თავში [Regular expressions](info:regular-expressions)).
     - შემდეგი გვერდის URL შეიძლება გამოიყურებოდეს როგორც `https://api.github.com/repositories/93253246/commits?page=2`. Github თვითონ აგენერირებს ამას.
 4. და შემდეგ თითო-თითო კომიტს ვაბრუნებთ, როცა დასრულდება, შემდეგი `while(url)` იტერაცია გაეშვება, რომელიც კიდევ ერთ რექუესთს გააგზავნის.
 
