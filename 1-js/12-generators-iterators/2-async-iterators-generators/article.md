@@ -140,7 +140,7 @@ let range = {
 Features that require regular, synchronous iterators, don't work with asynchronous ones.
 სინქრონული იტერატორების თვისებებს ასინქრონულებთან ვერ გამოვიყენებთ.
 
-მაგალითად, გაშლი ოპერატორი არ იმუშავებს:
+მაგალითად, გაშლის ოპერატორი არ იმუშავებს:
 ```js
 alert( [...range] ); // Error, no Symbol.iterator
 ```
