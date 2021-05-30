@@ -1,2 +1,2 @@
 
-# Generators, advanced iteration
+# გენერატორები, იტერაცია შემდეგ ლეველზე

@@ -1,15 +1,15 @@
 
-# Async iteration and generators
+# ასინქრონული იტერაცია და გენერატორები
 
-Asynchronous iteration allow us to iterate over data that comes asynchronously, on-demand. Like, for instance, when we download something chunk-by-chunk over a network. And asynchronous generators make it even more convenient.
+ასინქრონული იტერაცია საშუალებას გვაძლევს გადავუყვეთ ასინქრონულად მიღებულ მონაცემს. მაგალითად, როდესაც ქსელიდან ნაწილ-ნაწილ ვიწერთ რაიმეს. ასინქრონული გენერატორები ამ ყველაფერს იმპლემენტაციას უფრო კომფორტულს ხდის.
 
-Let's see a simple example first, to grasp the syntax, and then review a real-life use case.
+მოდი ჯერ მარტივი მაგალითი ვნახოთ, გავიგოთ სინტაქსი როგორია და შემდეგ რეალური მაგალითი განვიხილოთ.
 
-## Recall iterables
+## გავიხსენოთ იტერატორები
 
-Let's recall the topic about iterables. 
+მოდი გავიხსენოთ იტერატორების თავი.
 
-The idea is that we have an object, such as `range` here:
+ანუ გვაქვს ობიექტი, როგირიცაა `range`:
 ```js
 let range = {
   from: 1,
@@ -17,17 +17,17 @@ let range = {
 };
 ```
 
-...And we'd like to use `for..of` loop on it, such as `for(value of range)`, to get values from `1` to `5`.
+...და გვინდა გამოვიყენოთ `for..of` ციკლი, როგორიცაა `for(value of range)`, რომ დავითრიოთ მნიშვნელობები `1`-დან `5`-მდე.
 
-In other words, we want to add an *iteration ability* to the object.
+სხვა სიტყვებით, ჩვენ გვინდა *იტერაციის უნარი* დავუმატოთ ობიექტს.
 
-That can be implemented using a special method with the name `Symbol.iterator`:
+ამის მისაღწევად საჭიროა სპეციალური მეთოდის გამოყენება `Symbol.iterator`:
 
-- This method is called in by the `for..of` construct when the loop is started, and it should return an object with the `next` method.
-- For each iteration, the `next()` method is invoked for the next value.
-- The `next()` should return a value in the form `{done: true/false, value:<loop value>}`, where `done:true` means the end of the loop.
+- ამ მეთოდს გამოიძახებს `for..of` ციკლის დასაწყისში გამოიძახებს, და მან უნდა დააბრუნოს ობიექტი `next` მეთოდით.
+- ყოველ იტერაციაზე, `next()` მეთოდი შემდეგი მნიშვნელობის მისაღებად გამოიძახება.
+- `next()`-მდა უნდა დააბრუნოს მნიშვნელობა ფორმით `{done: true/false, value:<ციკლის მნიშვნელობა>}`, სადაც `done:true` ციკლის დასასრულს ნიშნავს.
 
-Here's an implementation for the iterable `range`:
+ქვემოთ მოცემულია იტერირებადი `range`-ის იმპლემენტაცია:
 
 ```js run
 let range = {
@@ -35,14 +35,14 @@ let range = {
   to: 5,
 
 *!*
-  [Symbol.iterator]() { // called once, in the beginning of for..of
+  [Symbol.iterator]() { // გამოიძახება მხოლოდ ერთხელ, for..of-ის დასაწყისში
 */!*
     return {
       current: this.from,
       last: this.to,
 
 *!*
-      next() { // called every iteration, to get the next value
+      next() { // გამოიძახება ყოველ იტერაციაზე შემდეგი მნიშვნელობის დასათრევად
 */!*
         if (this.current <= this.last) {
           return { done: false, value: this.current++ };
@@ -59,25 +59,25 @@ for(let value of range) {
 }
 ```
 
-If anything is unclear, please visit the chapter [](info:iterable), it gives all the details about regular iterables.
+თუ რამე გაუგებარია, ეწვიეთ თავს [იტერატორები](info:iterable), ჩვეულებრივ იტერატორებზე ინფორმაციის მისაღებად.
 
-## Async iterables
+## ასინქრონული იტერატორები
 
-Asynchronous iteration is needed when values come asynchronously: after `setTimeout` or another kind of delay. 
+ასინქრონული იტერაცია საჭიროა როდესაც მნიშვნელობებს ასინქრონულად ვიღებთ: `setTimeout`-ის ან მაგდაგვარი შემფერხებლის შემდეგ.
 
-The most common case is that the object needs to make a network request to deliver the next value, we'll see a real-life example of it a bit later.
+ყველაზე ხშირი შემთხვევაა როდესაც ობიექტი ქსელს რექუესთს გაუგზავნის რომ შემდეგი მნიშვნელობა მიიღოს, ცოტა ხანში რეალურ მაგალითსაც განვიხილავთ.
 
-To make an object iterable asynchronously:
+იმისათვის რომ ობიექტი ასინქრონულად იტერირებადი ვაქციოთ, უნდა:
 
-1. Use `Symbol.asyncIterator` instead of `Symbol.iterator`.
-2. The `next()` method should return a promise (to be fulfilled with the next value).
-    - The `async` keyword handles it, we can simply make `async next()`.
-3. To iterate over such an object, we should use a `for await (let item of iterable)` loop.
-    - Note the `await` word.
+1. გამოვიყენოთ `Symbol.asyncIterator` `Symbol.iterator`-ის მაგივრად.
+2. `next()` მეთოდმა უნდა დააბრუნოს "დაპირება" (promise, და მეც "ფრომისს" გამოვიყენებ), რათა შემდეგი მნიშვნელობით შეივსოს.
+    - `async` ქივორდი მიხედავს ამ სიტუაციას, შეგვიძლია პირდაპირ `async next()` გამოვიყენოთ.
+3. ასეთ ობიექტს რომ გადავუყვეთ, უნდა გამოვიყენოთ `for await (let item of iterable)` ციკლი.
+    - ყურადღება მიაქციეთ `await` სიტყვას.
 
-As a starting example, let's make an iterable `range` object, similar like the one before, but now it will return values asynchronously, one per second.
+მოდი დასაწყისისთვის შევქმნათ წინა `range`-ის მაგვარი ობიექტი, მაგრამ ამჯერაც ის დააბრუნებს ასინქრონულ მნიშვნელობებს ყოველ ერთ წამში.
 
-All we need to do is to perform a few replacements in the code above:
+მხოლოდ რამდენიმე ცვლილების შეტანა მოგვიწევს.
 
 ```js run
 let range = {
@@ -96,7 +96,7 @@ let range = {
 */!*
 
 *!*
-        // note: we can use "await" inside the async next:
+        // დააკვირდით, ჩვენ შეგვიძლია "await" გამოვიყენოთ async next-ში:
         await new Promise(resolve => setTimeout(resolve, 1000)); // (3)
 */!*
 
@@ -121,43 +121,44 @@ let range = {
 })()
 ```
 
-As we can see, the structure is similar to regular iterators:
+როგორცე ხედავთ, იგივე სტრუქტურა აქვს როგორც ჩვეულებრივ იტერატორს:
 
-1. To make an object asynchronously iterable, it must have a method `Symbol.asyncIterator` `(1)`.
-2. This method must return the object with `next()` method returning a promise `(2)`.
-3. The `next()` method doesn't have to be `async`, it may be a regular method returning a promise, but `async` allows us to use `await`, so that's convenient. Here we just delay for a second `(3)`.
-4. To iterate, we use `for await(let value of range)` `(4)`, namely add "await" after "for". It calls `range[Symbol.asyncIterator]()` once, and then its `next()` for values.
+1. იმისათვის რომ ობიექტი გავხადოთ ასინქრონულად იტერირებადი, მას უნდა ჰქონდეს მეთOდი `Symbol.asyncIterator` `(1)`.
+2. ამ მეთოდმა უნდა დააბრუნოს ობიექტი `async next()` მეთოდით `(2)`.
+3. `next()` მეთოდი არაა სავალდებულო იყოს `async`, ის შეიძლება იყოს ჩვეულებრივი მეთოდი რომელიც აბრუნებს ფრომისს, მაგრამ `async` საშუალებას გვაძლევს `await`-ის გამოყენებას და ამიტომ უფრო კომფორტულია. `(3)` აქ ჩვენ უბრალოდ 1 წამი ვაფერხებთ.
+4. იტერაციის ჩვენ ვიყენებთ `for await (let value of range)` `(4)`, არ დაგავიწყდეთ "await"-ის დამატება "for"-ის შემდეგ. ის იძახებს `range[Symbol.asyncIterator]()`-ს ერთხელ, და შემდეგ `next()`-ს მომდევნო მნიშვნელობებისთვის.
 
-Here's a small table with the differences:
+ქვემოთ ცხრილში მითითებულია განსხვავებები:
 
-|       | Iterators | Async iterators |
+|       | იტერატორები | ასინქრონული იტერატორები |
 |-------|-----------|-----------------|
-| Object method to provide iterator | `Symbol.iterator` | `Symbol.asyncIterator` |
-| `next()` return value is              | any value         | `Promise`  |
-| to loop, use                          | `for..of`         | `for await..of` |
+| ობიექტის მეთოდი იტერაციის გადასაცემად | `Symbol.iterator` | `Symbol.asyncIterator` |
+| `next()` რასაც აბრუნებს              | any value         | `Promise`  |
+| იტერაციისთვის გამოყენებული ციკლი                          | `for..of`         | `for await..of` |
 
-````warn header="The spread syntax `...` doesn't work asynchronously"
+````warn header="გაშლის ოპერატორს `...` ასინქრონულ სიტუაციაში ვერ გამოვიყენებთ"
 Features that require regular, synchronous iterators, don't work with asynchronous ones.
+სინქრონული იტერატორების თვისებებს ასინქრონულებთან ვერ გამოვიყენებთ.
 
-For instance, a spread syntax won't work:
+მაგალითად, გაშლი ოპერატორი არ იმუშავებს:
 ```js
 alert( [...range] ); // Error, no Symbol.iterator
 ```
 
-That's natural, as it expects to find `Symbol.iterator`, not `Symbol.asyncIterator`.
+ანუ ბუნებრივია, რადგან ის ცდილობს მოძებნოს `Symbol.iterator` და არა `Symbol.asyncIterator`. 
 
-It's also the case for `for..of`: the syntax without `await` needs `Symbol.iterator`.
+იგივე სიტუაციაა `for..of`-თვის: `await`-ის გარეშე მხოლოდ `Symbol.iterator`-თან შეგვიძლია გამოვიყენოთ.
 ````
 
-## Recall generators
+## გავიხსენოთ გენერატორები
 
-Now let's recall generators, as they allow to make iteration code much shorter. Most of the time, when we'd like to make an iterable, we'll use generators.
+მოდი გავიხსენოთ გენერატორები, რადგან ისინი იტერაციის კოდის მოკლედ დაწერის საშუალებას გვაძლევენ. ხშირად, როცა გვინდა რაიმე იტერირებადის შექმნა გვინდა, გამოვიყენებთ გენერატორებს.
 
-For sheer simplicity, omitting some important stuff, they are "functions that generate (yield) values". They are explained in detail in the chapter [](info:generators).
+სიმარტივისთვის, დეტალები რომ გამოვტოვოთ, ისინი არიან "ფუნქციები, რომლებიც აგენერირებენ (აბრუნებენ, yield) მნიშვნელობებს". უფრო დეტალურად აღწერილია თავში [გენერატორები](info:generators).
 
-Generators are labelled with `function*` (note the start) and use `yield` to generate a value, then we can use `for..of` to loop over them.
+გენერატორის სინტაქსი იწყება `function*`-ით (ყურადღება მიაქციეთ ვარსკვლავს) და იყენებს `yield`-ის მნიშვნელობის დასაგენერირებლად, და იტერაციისთვის შეგვიძლია გამოვიყენოთ `for..of` ციკლი.
 
-This example generates a sequence of values from `start` to `end`:
+ეს მაგალითი აგენერირებს მიმდევრობას `start`-დან `end`-მდე:
 
 ```js run
 function* generateSequence(start, end) {
@@ -167,11 +168,11 @@ function* generateSequence(start, end) {
 }
 
 for(let value of generateSequence(1, 5)) {
-  alert(value); // 1, then 2, then 3, then 4, then 5
+  alert(value); // 1, შემდეგ 2, შემდეგ 3, შემდეგ 4, შემდეგ 5
 }
 ```
 
-As we already know, to make an object iterable, we should add `Symbol.iterator` to it.
+როგორც უკვე ვიცით, იმისათვის რომ ობიექტი გავხადოთ იტერირებადი, უნდა გამოვიყენოთ `Symbol.iterator`.
 
 ```js
 let range = {
@@ -179,20 +180,20 @@ let range = {
   to: 5,
 *!*
   [Symbol.iterator]() {
-    return <object with next to make range iterable>
+    return <ობიექტი `next` მეთოდით რომ დიაპაზონზე იტერირებადი გავხადოთ>
   }
 */!*
 }
 ```
 
-A common practice for `Symbol.iterator` is to return a generator, it makes the code shorter, as you can see:
+ზოგადად `Symbol.iterator`-ს წერენ ისე რომ გენერატორი დააბრუნოს, როგორც ხედავთ კოდს უფრო მოკლეს ხდის:
 
 ```js run
 let range = {
   from: 1,
   to: 5,
 
-  *[Symbol.iterator]() { // a shorthand for [Symbol.iterator]: function*()
+  *[Symbol.iterator]() { // [Symbol.iterator]: function*() -ის შემოკლებული ვერსია
     for(let value = this.from; value <= this.to; value++) {
       yield value;
     }
@@ -200,25 +201,25 @@ let range = {
 };
 
 for(let value of range) {
-  alert(value); // 1, then 2, then 3, then 4, then 5
+  alert(value); // 1, შემდეგ 2, შემდეგ 3, შემდეგ 4, შემდეგ 5
 }
 ```
 
-Please see the chapter [](info:generators) if you'd like more details.
+უფრო მეტი დეტალისთვის წაიკითხეთ თავი [გენერატორებზე](info:generators).
 
-In regular generators we can't use `await`. All values must come synchronously, as required by the `for..of` construct.
+ჩვეულებრიც გენერატორებში ჩვენ ვერ გამოვიყენებთ `await`-ს. `for..of`-ის მოთხოვნაა რომ ყველა მნიშვნელობა სინქრონულად დაუბრუნდეს.
 
-What if we'd like to generate values asynchronously? From network requests, for instance. 
+მაგრამ, იქნებ გვინდა რომ ასინქრონულად დავაგენერიროთ მნიშვნელობები? მაგალითად, ქსელის რექუესთიდან.
 
-Let's switch to asynchronous generators to make it possible.
+იმისათვის, რომ ამას მივაღწიოთ, მოდი გადავიდეთ ასინქრონულ გენერატორებზე.
 
-## Async generators (finally)
+## ასინქრონული გენერატორები (როგორც იქნა)
 
-For most practical applications, when we'd like to make an object that asynchronously generates a sequence of values, we can use an asynchronous generator.
+პრაქტიკაში, როცა გვინდა რომ ობიექტმა ასინქრონულად დააგენერიროს მნიშვნელობების მიმდევრობა, შეგვიძლია გამოვიყენოთ ასინქრონული გენერატორი.
 
-The syntax is simple: prepend `function*` with `async`. That makes the generator asynchronous.
+სინტაქსი მარტივია: `function*`-ის წინ დავწეროთ `async`, რაც შექმნის ასინქრონულ გენერატორს.
 
-And then use `for await (...)` to iterate over it, like this:
+და შემდეგ იტერაციის გამოვიყენოთ `for await (...)` ასე:
 
 ```js run
 *!*async*/!* function* generateSequence(start, end) {
@@ -226,7 +227,7 @@ And then use `for await (...)` to iterate over it, like this:
   for (let i = start; i <= end; i++) {
 
 *!*
-    // Wow, can use await!
+    // ჩემი კაი, await-ის გამოყენება შეგვიძლია!
     await new Promise(resolve => setTimeout(resolve, 1000));
 */!*
 
@@ -239,47 +240,47 @@ And then use `for await (...)` to iterate over it, like this:
 
   let generator = generateSequence(1, 5);
   for *!*await*/!* (let value of generator) {
-    alert(value); // 1, then 2, then 3, then 4, then 5 (with delay between)
+    alert(value); // 1, შემდეგ 2, შემდეგ 3, შემდეგ 4, შემდეგ 5 (მათ შორის შეფერხებებით)
   }
 
 })();
 ```
 
-As the generator is asynchronous, we can use `await` inside it, rely on promises, perform network requests and so on.
+ვინაიდან გენერატორი ასინქრონულია, შიგნით შეგვიძლია გამოვიყენოთ `await`, ვიმოქმედოთ ფრომისებზე, ქსელში რექუესთები გავუშვათ და ა.შ.
 
-````smart header="Under-the-hood difference"
-Technically, if you're an advanced reader who remembers the details about generators, there's an internal difference.
+````smart header="შინაგანი განსხვავება"
+ტექნიკურად, თუ მაგარი ტიპი ხარ, რომელსაც ახსოვს დეტალები გენერატორებზე, შინაგანად არის რაღაც განსხვავება.
 
-For async generators, the `generator.next()` method is asynchronous, it returns promises.
+ასინქრონული გენერატორებისთვის, `generator.next()` მეთოდი ასინქრონულია, გვიბრუნებს ფრომისებს.
 
-In a regular generator we'd use `result = generator.next()` to get values. In an async generator, we should add `await`, like this:
+ჩვეულებრივ გენერატორში, მნიშვნელობების დასათრევად `result = generator.next()`-ს ვიყენებთ. ასინქრონულ გენერატორში, წინ უნდა დავუმატოთ `await`:
 
 ```js
 result = await generator.next(); // result = {value: ..., done: true/false}
 ```
-That's why async generators work with `for await...of`.
+ამიტომაცაა რომ ასინქრონული გენერატორებისთვის ვიყენებთ for await...if`.
 ````
 
-### Async iterable range
+### ასინქრონულად იტერირებადი დიაპაზონი
 
-Regular generators can be used as `Symbol.iterator` to make the iteration code shorter.
+ჩვეულებრივი გენერატორები შეგვიძლია გამოვიყენოთ როგორც `Symbol.iterator` რომ კოდი უფრო შევამოკლოთ.
 
-Similar to that, async generators can be used as `Symbol.asyncIterator` to implement the asynchronous iteration.
+შესაბამისად, ასინქრონული გენერატორები, ასინქრონული იტერაციისთვის, შეგვიძლია გამოვიყენოთ როგორც `Symbol.asyncIterator`.
 
-For instance, we can make the `range` object generate values asynchronously, once per second, by replacing synchronous `Symbol.iterator` with asynchronous `Symbol.asyncIterator`:
+მაგალითად, შეგვიძლია `range` ობიექტს დავაგენერირებინოთ მნიშვნელობები ასინქრონულად, ყოველ წამში, თუ ჩავანაცვლებთ სინქრონულ `Symbol.iterator`-ს ასინქრონულით `Symbol.asyncIterator`:
 
 ```js run
 let range = {
   from: 1,
   to: 5,
 
-  // this line is same as [Symbol.asyncIterator]: async function*() {
+  // ეს ხაზი იგივეა როგორც [Symbol.asyncIterator]: async function*() {
 *!*
   async *[Symbol.asyncIterator]() {
 */!*
     for(let value = this.from; value <= this.to; value++) {
 
-      // make a pause between values, wait for something  
+      // დავაპაუზოთ მნიშვნელობებს შორის, თითქოს რაღაცას ველოდებით
       await new Promise(resolve => setTimeout(resolve, 1000));
 
       yield value;
@@ -290,47 +291,47 @@ let range = {
 (async () => {
 
   for *!*await*/!* (let value of range) {
-    alert(value); // 1, then 2, then 3, then 4, then 5
+    alert(value); // 1, შემდეგ 2, შემდეგ 3, შემდეგ 4, შემდეგ 5
   }
 
 })();
 ```
 
-Now values come with a delay of 1 second between them.
+მნიშვნელობები 1 წამის შეფერხებით გვიბრუნდება.
 
 ```smart
-Technically, we can add both `Symbol.iterator` and `Symbol.asyncIterator` to the object, so it's both synchronously (`for..of`) and asynchronously (`for await..of`) iterable.
+იდეაში, ობიექტს შეგვიძლია დავუმატოთ `Symbol.iterator` და `Symbol.asyncIterator`-ც, რომ სინქრონულად (`for..of`) და ასინქრონულად (`for await..of`) იტერირებადი იყოს.
 
-In practice though, that would be an weird thing to do.
+პრაქტიკაში, რავი მე არ მინახავს.
 ```
 
-## Real-life example: paginated data
+## რეალური მაგალითი: პაგინირებული მონაცემები
 
-So far we've seen basic examples, to gain understanding. Now let's review a real-life use case.
+აქამდე ჩვეულებრივ მაგალითებს განვიხილავდით, რომ რაღაც აზრი ჩამოგვეყალიბებინა. ახლა რეალური მაგალითი განვიხილოთ.
 
-There are many online services that deliver paginated data. For instance, when we need a list of users, a request returns a pre-defined count (e.g. 100 users) - "one page", and provides a URL to the next page.
+ბევრი ონლაინ სერვისი არსებობს რომელიც პაგინირებულ მონაცემებს აბრუნებენ. მაგალითად, როდესაც მომხმარებლების სია გვინდა, რექუესთი აბრუნებს წინასწარ განსაზღვრულ რაოდენობას (მაგალითად, 100 მომხმარებელს) - "1 გვერდს", და შემდეგი გვერდის დასათრევად ახალ URL-საც გვიბრუნებს.
 
-This pattern is very common. It's not about users, but just about anything. 
+ეს კანონზომიერება ხშირია, არა მარტო მომხმარებლების შემთხვევაში, არამედ ზოგადადაც.
 
-For instance, GitHub allows us to retrieve commits in the same, paginated fashion:
+მაგალითად, GitHub საშუალებას გვაძლევს რომ კომიტები იმავენაირად, პაგინირებულად დაგვიბრუნოს:
 
-- We should make a request to `fetch` in the form `https://api.github.com/repos/<repo>/commits`.
-- It responds with a JSON of 30 commits, and also provides a link to the next page in the `Link` header.
-- Then we can use that link for the next request, to get more commits, and so on.
+- ჩვენ უნდა გავაგზავნოთ რექუესთი რომ დავ-`fetch`-ოთ `https://api.github.com/repos/<repo>/commits`.
+- პასუხი დაგვიბრუნდება JSON-ის სახით, რომელიც 30 კომიტს შეიცავს, და ასევე შემდეგი გვერდის დასათრევად `Link` ჰედერში გვექნება ახალი URL.
+- შემდეგ შეგვიძლია ის ლინკი შემდეგი რექუესთის გასაგზავნად გამოვიყენოთ, რომ კიდევ სხვა კომიტები დავითრიოთ, და ა.შ.
 
-For our code, we'd like to have a simpler way to get commits.
+ჩვენი კოდისთვის, უფრო მარტივი გზა გვინდა კომიტების დასათრევად.
 
-Let's make a function `fetchCommits(repo)` that gets commits for us, making requests whenever needed. And let it care about all pagination stuff. For us it'll be a simple async iteration `for await..of`.
+მოდი შევქმნათ ფუნქცია `fetchCommits(repo)` რომელიც ჩვენთვის კომიტებს დააბრუნებს, გააგზავნის რექუესთს როცა საჭიროა. და მიხედავს პაგინირებასთან დაკავშირებულ საკითხებს. ჩვენთვის ის იქნება მარტივი ასინქრონული იტერაცია `for await..of`.
 
-So the usage will be like this:
+ანუ ასე გამოვიყენებთ:
 
 ```js
 for await (let commit of fetchCommits("username/repository")) {
-  // process commit
+  // დაამუშავე კომიტი
 }
 ```
 
-Here's such function, implemented as async generator:
+აი ამდაგვარი ფუნქცია, იმპლემენტირებული როგორც ასინქრონული გენერატორი:
 
 ```js
 async function* fetchCommits(repo) {
@@ -338,36 +339,36 @@ async function* fetchCommits(repo) {
 
   while (url) {
     const response = await fetch(url, { // (1)
-      headers: {'User-Agent': 'Our script'}, // github needs any user-agent header
+      headers: {'User-Agent': 'Our script'}, // github მოითხოვს user-agent ჰედერს
     });
 
-    const body = await response.json(); // (2) response is JSON (array of commits)
+    const body = await response.json(); // (2) პასუხი არის JSON (კომიტების მასივი)
 
-    // (3) the URL of the next page is in the headers, extract it
+    // (3) შემდეგი გვერდის URL არის ჰედერებში, დავაექსტრაქტოთ
     let nextPage = response.headers.get('Link').match(/<(.*?)>; rel="next"/);
     nextPage = nextPage?.[1];
 
     url = nextPage;
 
-    for(let commit of body) { // (4) yield commits one by one, until the page ends
+    for(let commit of body) { // (4) დავაბრუნოთ თითო-თითო კომიტი, სანამ გვერდის ბოლოს არ მივაღწევთ
       yield commit;
     }
   }
 }
 ```
 
-More explanations about how it works:
+უფრო დეტალურად, როგორ მუშაობს:
 
-1. We use the browser [fetch](info:fetch) method to download the commits.
+1. ჩვენ ვიყენებთ ბრაუზერის [fetch](info:fetch) მეთოდს რომ კომიტები ჩამოვტვირთოთ.
 
-    - The initial URL is `https://api.github.com/repos/<repo>/commits`, and the next page will be in the `Link` header of the response.
-    - The `fetch` method allows us to supply authorization and other headers if needed -- here GitHub requires `User-Agent`.
-2. The commits are returned in JSON format.
-3. We should get the next page URL from the `Link` header of the response. It has a special format, so we use a regular expression for that.
-    - The next page URL may look like `https://api.github.com/repositories/93253246/commits?page=2`. It's generated by GitHub itself.
-4. Then we yield the received commits one by one, and when they finish, the next `while(url)` iteration will trigger, making one more request.
+    - საწყისი URL არის `https://api.github.com/repos/<repo>/commits`, და შემდეგი გვერდი იქნება პასუხის `Link` ჰედერში.
+    - `fetch` მეთოდი, თუ დაგვჭირდა, authorization-ისა და სხვა ჰედერების მითითების საშუალებას გვაძლევს -- ჩვენს შემთხვევაში Github მოითხოვს `User-Agent`-ს.
+2. კომიტები გვიბრუნდება JSON ფორმატში.
+3. შემდეგი გვერდის URL-ს `Link` ჰედერში ვგებულობთ. სპეციალურ ფორმატშია და ამიტომ regular expression-ს ვიყენებთ მაგისთვის.
+    - შემდეგი გვერდის URL შეიძლება გამოიყურებოდეს როგორც `https://api.github.com/repositories/93253246/commits?page=2`. Github თვითონ აგენერირებს ამას.
+4. და შემდეგ თითო-თითო კომიტს ვაბრუნებთ, როცა დასრულდება, შემდეგი `while(url)` იტერაცია გაეშვება, რომელიც კიდევ ერთ რექუესთს გააგზავნის.
 
-An example of use (shows commit authors in console):
+გამოყენების მაგალითი (კონსოლში კომიტის ავტორს ბეჭდავს):
 
 ```js run
 (async () => {
@@ -378,7 +379,7 @@ An example of use (shows commit authors in console):
 
     console.log(commit.author.login);
 
-    if (++count == 100) { // let's stop at 100 commits
+    if (++count == 100) { // 100 კომიტზე გავჩერდეთ.
       break;
     }
   }
@@ -386,30 +387,30 @@ An example of use (shows commit authors in console):
 })();
 ```
 
-That's just what we wanted. 
+ზუსტად ისაა რაც გვინდოდა.
 
-The internal mechanics of paginated requests is invisible from the outside. For us it's just an async generator that returns commits.
+გარე სამყაროსთვის პაგინირებულ რექუესთებში რა ხდება, უჩინარია. ჩვენთვის ის მხოლოდ ასინქრონული გენერატორია რომელიც კომიტებს გვიბრუნებს.
 
-## Summary
+## შეჯამება
 
-Regular iterators and generators work fine with the data that doesn't take time to generate.
+ჩვეულებრივი იტერატორები და გენერატორები მშვენივრად მუშაობენ მონაცემებთან რომელთა დასაგენერირებლად დიდი დრო საჭირო არაა.
 
-When we expect the data to come asynchronously, with delays, their async counterparts can be used, and `for await..of` instead of `for..of`.
+როდესაც ველით რომ მონაცემები ასინქრონულად მოგვივა, შეფერხებებით, შეგვიძლია ასინქრონული ნაწილები გამოვიყენოთ.
 
-Syntax differences between async and regular iterators:
+ასინქრონული და ჩვეულებრივი იტერატორების სინტაქს შორის განსხვავებები:
 
-|       | Iterable | Async Iterable |
+|       | იტერირებადი | ასინქრონულად იტერირებადი |
 |-------|-----------|-----------------|
-| Method to provide iterator | `Symbol.iterator` | `Symbol.asyncIterator` |
-| `next()` return value is          | `{value:…, done: true/false}`         | `Promise` that resolves to `{value:…, done: true/false}`  |
+| მეთოდი, რომელიც საჭიროა ობიექტი იტერირებადი გავხადოთ | `Symbol.iterator` | `Symbol.asyncIterator` |
+| `next()`-ის მნიშვნელობაა | `{value:…, done: true/false}`         | `Promise` რომელიც შემდეგ დაგვიბრუნებს `{value:…, done: true/false}`  |
 
-Syntax differences between async and regular generators:
+ასინქრონული და ჩვეულებრივი გენერატორების სინტაქს შორის განსხვავებები:
 
-|       | Generators | Async generators |
+|       | გენერატორები | ასინქრონული გენერატორები |
 |-------|-----------|-----------------|
-| Declaration | `function*` | `async function*` |
-| `next()` return value is          | `{value:…, done: true/false}`         | `Promise` that resolves to `{value:…, done: true/false}`  |
+| სინტაქსი | `function*` | `async function*` |
+| `next()`-ის მნიშვნელობაა | `{value:…, done: true/false}`         | `Promise` რომელიც შემდეგ დაგვიბრუნებს `{value:…, done: true/false}`  |
 
-In web-development we often meet streams of data, when it flows chunk-by-chunk. For instance, downloading or uploading a big file.
+ვებ-დეველოპმენტში ხშირად შევხვდებით მონაცემთა სტრიმებს, როდესაც ის ნაწილ-ნაწილ მიედინება. მაგალითად, დიდი ფაილის ჩამოტვირთვის ან ატვირთვისას.
 
-We can use async generators to process such data. It's also noteworthy that in some environments, like in browsers, there's also another API called Streams, that provides special interfaces to work with such streams, to transform the data and to pass it from one stream to another (e.g. download from one place and immediately send elsewhere).
+ასეთი მონაცემების დასამუშავებლად, ჩვენ შეგვიძლია გამოვიყენოთ ასინქრონული გენერატორები. აქვე ღირს იმის თქმა რომ, ზოგიერთ გარემოში, როგორიცაა ბრაუზერები, არის სხვა API სახელად Streams, რომელიც ასეთი სტრიმები დასამუშავებლად, სპეციალურ ინტერფეისს გვაწვდის, რომ გარდავქმნათ მონაცემები და ერთი სტრიმიდან მეორეს გადავცეთ (მაგალითად, ჩამოვტვირთოთ რაიმე ადგილიდან და იმწამსვე სხვაგან გავაგზავნოთ).
