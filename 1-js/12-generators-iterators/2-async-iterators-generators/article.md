@@ -386,7 +386,7 @@ async function* fetchCommits(repo) {
 
 })();
 
-// Note: If you are running this in an external sandbox, you'll need to paste here the function fetchCommits described above 
+// ყურადღება: თუ არ დაგავიწყდეთ fetchCommits ფუნქციის იმპლემენტაცია.
 ```
 
 ზუსტად ისაა რაც გვინდოდა.
