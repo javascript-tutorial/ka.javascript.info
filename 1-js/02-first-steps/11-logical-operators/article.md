@@ -1,4 +1,4 @@
-# Logical operators
+# Logical operators: ||, && and !
 
 There are four logical operators in JavaScript: `||` (OR), `&&` (AND), `!` (NOT), `??` (Nullish Coalescing). Here we cover the first three, the `??` operator is in the next article.
 
