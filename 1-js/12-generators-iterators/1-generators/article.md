@@ -1,14 +1,15 @@
-# Generators
 
-Regular functions return only one, single value (or nothing).
+# გენერატორები
 
-Generators can return ("yield") multiple values, one after another, on-demand. They work great with [iterables](info:iterable), allowing to create data streams with ease.
+ჩვეულებრივი ფუნქციები მხოლოდ ერთ (ან არცერთ) მნიშვნელობას აბრუნებენ.
 
-## Generator functions
+გენერატორებს შეუძლიათ რამდენიმე მნიშვნელობის დაბრუნება ("გაცემა", "დანებება", "yield"). ისინი [იტერატორებთან](info:iterable) კარგად მუშაობენ და მათი ერთად გამოყენება მონაცემთა სტრიმების შექმნას ამარტივებს.
 
-To create a generator, we need a special syntax construct: `function*`, so-called "generator function".
+## გენერატორი ფუნქციები
 
-It looks like this:
+გენერატორის შესაქმნელად სპეციაულური სინტაქსი გვჭირდება: `function*`, ე.წ. "გენერატორი ფუნქცია".
+
+მაგალითად:
 
 ```js
 function* generateSequence() {
@@ -18,9 +19,9 @@ function* generateSequence() {
 }
 ```
 
-Generator functions behave differently from regular ones. When such function is called, it doesn't run its code. Instead it returns a special object, called "generator object", to manage the execution.
+გენერატორი ფუნქციები ჩვეულებრივისგან განსხვავებულად მოქმედებენ. ასეთი ფუნქციის გამოძახებისას, შიგნით არსებული კოდი არ ეშვება, არამედ აბრუნებს სპეციაულურ ობიექტს, "გენერატორ ობიექტს", რომ მართოს კოდის გაშვების პროცესი.
 
-Here, take a look:
+მაგალითისთვის:
 
 ```js run
 function* generateSequence() {
@@ -29,24 +30,25 @@ function* generateSequence() {
   return 3;
 }
 
-// "generator function" creates "generator object"
+// "გენერატორი ფუნქცია" ქმნის "გენერატორ ობიექტს"
 let generator = generateSequence();
 *!*
 alert(generator); // [object Generator]
 */!*
 ```
 
-The function code execution hasn't started yet:
+ფუნქციის კოდი ჯერ არ ეშვება.
 
 ![](generateSequence-1.svg)
 
-The main method of a generator is `next()`. When called, it runs the execution until the nearest `yield <value>` statement (`value` can be omitted, then it's `undefined`). Then the function execution pauses, and the yielded `value` is returned to the outer code.
+გენერატორის მთავარი მეთოდი არის `next()`. გამოძახებისას, კოდი უახლოეს `yield <მნიშვნელობა>`-მდე ეშვება (თუ `მნიშვნელობა`-ს არ მივუთითებთ, მაშინ `undefined`-ს დააბრუნებს). ფუნქციის კოდი პაუზდება, და გამომძახებელს `მნიშვნელობა` უბრუნდება.
 
-The result of `next()` is always an object with two properties:
-- `value`: the yielded value.
-- `done`: `true` if the function code has finished, otherwise `false`.
+`next()`-ის მნიშვნელობა ყოველთვის ობიექტია ორი მახასიათებლით:
 
-For instance, here we create the generator and get its first yielded value:
+- `value`: დაბრუნებული მნიშვნელობა.
+- `done`: `true` თუ ფუნქციის კოდის გაშვება დასრულდა, სხვა შემთხვევაში `false`.
+
+მაგალითად, ამ შემთხვევაში ვქმნით გენერატორს და პირველ ჯერზე დაბრუნებულ მნიშვნელობას ვიღებთ:
 
 ```js run
 function* generateSequence() {
@@ -64,11 +66,11 @@ let one = generator.next();
 alert(JSON.stringify(one)); // {value: 1, done: false}
 ```
 
-As of now, we got the first value only, and the function execution is on the second line:
+ესეიგი, ჩვენ მხოლოდ პირველი მნიშვნელობა მივიღეთ, და ახლა კი ფუნქცია მზადაა მეორე ხაზზე არსებული კოდი გაუშვას.
 
 ![](generateSequence-2.svg)
 
-Let's call `generator.next()` again. It resumes the code execution and returns the next `yield`:
+მოდი კიდევ ერთხელ გამოვიძახოთ `generator.next()`. ფუნქცია აგრძელებს კოდის გაშვებას და აბრუნებს შემდეგ `yield`-ს:
 
 ```js
 let two = generator.next();
@@ -78,7 +80,7 @@ alert(JSON.stringify(two)); // {value: 2, done: false}
 
 ![](generateSequence-3.svg)
 
-And, if we call it a third time, the execution reaches the `return` statement that finishes the function:
+და, თუ ახლა უკვე მესამეჯერაც გამოვიძახებთ, მაშინ `return`-ს მივაღწევთ, რაც ფუნქციის გამოძახებას ამთავრებს:
 
 ```js
 let three = generator.next();
@@ -88,21 +90,22 @@ alert(JSON.stringify(three)); // {value: 3, *!*done: true*/!*}
 
 ![](generateSequence-4.svg)
 
-Now the generator is done. We should see it from `done:true` and process `value:3` as the final result.
+როგორც საბოლოო შედეგიდან - `done:true` და `value:3` ჩანს, ახლა უკვე გენერატორი დასრულებულია.
 
-New calls to `generator.next()` don't make sense any more. If we do them, they return the same object: `{done: true}`.
+ხელახლა `generator.next()`-ის გამოძახებას აზრი არა აქვს. თუ მაინც გამოვიძახებთ, ყოველჯერზე იმავე ობიექტს დაგვიბრუნებს: `{done: true}`.
 
-```smart header="`function* f(…)` or `function *f(…)`?"
-Both syntaxes are correct.
+```smart header="`function* f(…)`or`function *f(…)`?"
+ორივე სინტაქსი სამართლიანია.
 
-But usually the first syntax is preferred, as the star `*` denotes that it's a generator function, it describes the kind, not the name, so it should stick with the `function` keyword.
+მაგრამ ზოგადად პირველი სინტაქსი სჯობს, რადგან ვარსკვლავი `*` ხაზს უსვამს რომ ის გენერატორი ფუნქციაა, ანუ ის აღწერს "ბუნებას"/ტიპს და არა ფუნქციის სახელს, შესაბამისად ის ფუნქციასთან უნდა იყოს.
+
 ```
 
-## Generators are iterable
+## გენერატორები იტერატორები არიან
 
-As you probably already guessed looking at the `next()` method, generators are [iterable](info:iterable).
+`next()` მეთოდი მიგვანიშნებს იმაზე, რომ გენერატორები არიან [იტერატორები](info:iterable).
 
-We can loop over their values using `for..of`:
+ჩვენ შეგვიძლია მათ მნიშვნელობებს `for..of`-ში გადავუყვეთ:
 
 ```js run
 function* generateSequence() {
@@ -114,15 +117,15 @@ function* generateSequence() {
 let generator = generateSequence();
 
 for(let value of generator) {
-  alert(value); // 1, then 2
+  alert(value); // 1, შემდეგ 2
 }
-```
+````
 
-Looks a lot nicer than calling `.next().value`, right?
+ალბათ, უფრო ლამაზად გამოიყურება ვიდრე `next().value`-ს გამოძახება.
 
-...But please note: the example above shows `1`, then `2`, and that's all. It doesn't show `3`!
+...მაგრამ, დაიმახსოვრეთ: წინა მაგალითი გვიჩვენებს `1`-ს, შემდეგ `2`-ს, და მორჩა. `3`-ს აღარ გვიჩვენებს!
 
-It's because `for..of` iteration ignores the last `value`, when `done: true`. So, if we want all results to be shown by `for..of`, we must return them with `yield`:
+ეს იმიტომ ხდება რომ `for..of` იტერაცია აიგნორებს ბოლო `value`-ს, როდესაც `done: true`. ანუ, თუ გვინდა რომ ყველა მნიშვნელობა დაგვიბრუნდეს `for..of`-ით, მაშინ უნდა გამოვიყენოთ `yield`:
 
 ```js run
 function* generateSequence() {
@@ -136,11 +139,11 @@ function* generateSequence() {
 let generator = generateSequence();
 
 for(let value of generator) {
-  alert(value); // 1, then 2, then 3
+  alert(value); // 1, შემდეგ 2, შემდეგ 3
 }
 ```
 
-As generators are iterable, we can call all related functionality, e.g. the spread syntax `...`:
+ვინაიდან გენერატორები არიან იტერატორები, ჩვენ შეგვიძლია იტერატორების ყველა მახასიათებელი მეთოდები გამოვიყენოთ, მაგალითად, გაშლის ოპერატორი (the spread syntax) `...`:
 
 ```js run
 function* generateSequence() {
@@ -154,82 +157,84 @@ let sequence = [0, ...generateSequence()];
 alert(sequence); // 0, 1, 2, 3
 ```
 
-In the code above, `...generateSequence()` turns the iterable generator object into an array of items (read more about the spread syntax in the chapter [](info:rest-parameters-spread#spread-syntax))
+ზემოთ მოცემულ კოდში, `...generateSequence()` იტერირებად გენერატორ ობიექტს ელემენტების მასივად გარდაქმნის (გაშლის ოპერატორზე მეტი ინფორმაციისთვის წაიკითხეთ [](info:rest-parameters-spread#spread-syntax))
 
-## Using generators for iterables
+## გენერატორების იტერატორებად გამოყენება
 
-Some time ago, in the chapter [](info:iterable) we created an iterable `range` object that returns values `from..to`.
+წინა თავში, [იტერატორები](info:iterable), ჩვენ შევქმენით იტერატორი `range` ობიექტი, რომელიც აბრუნებს მნიშვნელობებს `from..to`.
 
-Here, let's remember the code:
+მოდი გავიხსენოთ წინა კოდი:
 
 ```js run
 let range = {
   from: 1,
   to: 5,
 
-  // for..of range calls this method once in the very beginning
+  // for..of ამ მეთოდს ერთხელ გამოიძახებს დასაწყისში
   [Symbol.iterator]() {
-    // ...it returns the iterator object:
-    // onward, for..of works only with that object, asking it for next values
+    // ...ის აბრუნებს იტერატორ ობიექტს:
+    // ამის შემდეგ, for..of მოქმედებს მხოლოდ მაგ ობიექტზე, სთხოვს შემდეგი მნიშვნელობების დაბრუნებას
     return {
       current: this.from,
       last: this.to,
 
-      // next() is called on each iteration by the for..of loop
+      // for..of ციკლი next()-ს ყოველ იტერაციაზე გამოიძახებს
       next() {
-        // it should return the value as an object {done:.., value :...}
+        // უნდა დააბრუნოს ობიექტი { done: ..., value: ... }
         if (this.current <= this.last) {
           return { done: false, value: this.current++ };
         } else {
           return { done: true };
         }
-      }
+      },
     };
-  }
+  },
 };
 
-// iteration over range returns numbers from range.from to range.to
+// იტერაცია `range`-ზე აბრუნებს რიცხვებს `range.from`-დან `range.to`-მდე
 alert([...range]); // 1,2,3,4,5
 ```
 
-We can use a generator function for iteration by providing it as `Symbol.iterator`.
+ჩვენ შეგვიძლია გენერატორი ფუნქცია გამოვიყენოთ იტერაციისთვის, როგორც `Symbol.iterator`.
 
-Here's the same `range`, but much more compact:
+ქვემოთ მოცემული `range` უფრო კომპაქტურია:
 
 ```js run
 let range = {
   from: 1,
   to: 5,
 
-  *[Symbol.iterator]() { // a shorthand for [Symbol.iterator]: function*()
-    for(let value = this.from; value <= this.to; value++) {
+  *[Symbol.iterator]() {
+    // [Symbol.iterator]: function*() -ის შემოკლებული ვერსია
+    for (let value = this.from; value <= this.to; value++) {
       yield value;
     }
-  }
+  },
 };
 
-alert( [...range] ); // 1,2,3,4,5
+alert([...range]); // 1,2,3,4,5
 ```
 
-That works, because `range[Symbol.iterator]()` now returns a generator, and generator methods are exactly what `for..of` expects:
-- it has a `.next()` method
-- that returns values in the form `{value: ..., done: true/false}`
+ზემოთ მოცემული მაგალითი ჭეშმარიტია, რადგან `range[Symbol.iterator]()` ახლა აბრუნებს გენერატორს, და გენერატორის მეთოდები ზუსტად ისაა რასაც `for..of` მოელის:
 
-That's not a coincidence, of course. Generators were added to JavaScript language with iterators in mind, to implement them easily.
+- მას აქვს `.next()` მეთოდი
+- რომელიც აბრუნებს ობიექტს `{value: ..., done: true/false}`
 
-The variant with a generator is much more concise than the original iterable code of `range`, and keeps the same functionality.
+ეს რა თქმა უნდა დამთხვევა არაა. გენერატორები ჯავასკრიპტში სწორედ მაგ მიზეზით დაამატეს, რომ იტერატორები უფრო მარტივად დაეწერათ.
 
-```smart header="Generators may generate values forever"
-In the examples above we generated finite sequences, but we can also make a generator that yields values forever. For instance, an unending sequence of pseudo-random numbers.
+გენერატორით დაწერლი ვერსია, იტერატორით დაწერილ `range` ვერსიასთან შედარებით, უფრო ლაკონურია და რა თქმა უნდა იმავე ფუნქციას ასრულებს.
 
-That surely would require a `break` (or `return`) in `for..of` over such generator. Otherwise, the loop would repeat forever and hang.
+```smart header="გენერატორებს მნიშვნელობების გენერირება სამუდამოდ შეუძლიათ"
+წინა მაგალითებში ჩვენ სასრული მიმდევრობა დავაგენერირეთ, მაგრამ ჩვენ შეგვიძლია ისეთი გენერატორი დავწეროთ, რომელიც მნიშვნელობებს უსასრულოდ დააბრუნებს. მაგალითად, ფსეუდო-რანდომი რიცხვების უსასრულო მიმდევრობა.
+
+რა თქმა უნდა, ამისათვის `break` (ან `return`) დაგვჭირდება `for..of`-ში. რომ უსასრულო ციკლი თავიდა ავირიდოთ.
 ```
 
-## Generator composition
+## გენერატორების კომპოზიცია
 
-Generator composition is a special feature of generators that allows to transparently "embed" generators in each other.
+გენერატორების კომპოზიცია გენერატორის მახასიათებელი თვისებაა, რომელიც გენერატორების ერთმანეთში "ჩაშენების" საშუალებას გვაძლევს.
 
-For instance, we have a function that generates a sequence of numbers:
+მაგალითად, გვაქვს ფუნქცია რომელიც აგენერირებს რიცხვების მიმდევრობას:
 
 ```js
 function* generateSequence(start, end) {
@@ -237,18 +242,19 @@ function* generateSequence(start, end) {
 }
 ```
 
-Now we'd like to reuse it to generate a more complex sequence:
-- first, digits `0..9` (with character codes 48..57),
-- followed by uppercase alphabet letters `A..Z` (character codes 65..90)
-- followed by lowercase alphabet letters `a..z` (character codes 97..122)
+ახლა კი, ჩვენ გვინდა ის გენერატორი გამოვიყენოთ უფრო კომპლექსური მიმდევრობის შესაქმნელად:
 
-We can use this sequence e.g. to create passwords by selecting characters from it (could add syntax characters as well), but let's generate it first.
+- ჯერ, ციფრები `0..9` (ქარაქტერის კოდები 48..57),
+- შემდეგ, დიდ-ასოებიანი ლათინური ანბანი `A..Z` (ქარაქტერის კოდები 65..90)
+- და ბოლოს, პატარა-ასოებიანი ლათინური ანბანი `a..z` (ქარაქტერის კოდები 97..122)
 
-In a regular function, to combine results from multiple other functions, we call them, store the results, and then join at the end.
+ჩვენ შეგვიძლია ეს მიმდევრობა გამოვიყენოთ, მაგალითად, შევქმნათ პაროლი სხვადასხვა ქარაქტერების არჩევით (შეგვიძლია ასევე სინტაქსის ქარაქტერები დავამატოთ), მაგრამ მოდი ჯერ ზემო ვარიანტი დავაგენერიროთ.
 
-For generators, there's a special `yield*` syntax to "embed" (compose) one generator into another.
+ჩვეულებრივ ფუნქციაში, იმისათვის რომ რამდენიმე სხვადასხვა ფუნქციის მნიშვნელობა გავაერთიანოთ, ჩვენ მათ ვიძახებთ,  ვინახავთ დაბრუნებულ მნიშვნელობებს და ბოლოს ვაერთიანებთ.
 
-The composed generator:
+გენერატორებისთვის არის სპეციაულური სინტაქსი `yield*`, რომელიც გენერატორების ერთმანეთში "ჩაშენების" საშუალებას გვაძლევს.
+
+გენერატორის საბოლოო ვერსია:
 
 ```js run
 function* generateSequence(start, end) {
@@ -279,9 +285,9 @@ for(let code of generatePasswordCodes()) {
 alert(str); // 0..9A..Za..z
 ```
 
-The `yield*` directive *delegates* the execution to another generator. This term means that `yield* gen` iterates over the generator `gen` and transparently forwards its yields outside. As if the values were yielded by the outer generator.
+`yield*` _ანდობს_ კოდის გაშვებას სხვა გენერატორს. ანუ, `yield* gen` იტერირებს გენერატორ `gen`-ზე და მის მიერ დაბრუნებულ მნიშვნელობას გადასცემს გარე სამყაროს, გამომძახებელს, თითქოს მთავარმა გენერატორმა დააბრუნა მნიშვნელობა.
 
-The result is the same as if we inlined the code from nested generators:
+ზუსტად იმავე შედეგს მივიღებდით თუ ჩაშენებული გენერატორის კოდს პირდაპირ დავწერდით:
 
 ```js run
 function* generateSequence(start, end) {
@@ -312,22 +318,22 @@ for(let code of generateAlphaNum()) {
 alert(str); // 0..9A..Za..z
 ```
 
-A generator composition is a natural way to insert a flow of one generator into another. It doesn't use extra memory to store intermediate results.
+გენერატორების კომპოზიცია ბუნებრივი გზაა იმისათვის რომ ერთი გენერატორის "დინება" მეორეში გამოვიყენოთ. ის არ იყენებს დამატებით მეხსიერებას რომ შუამავალი შედეგები შევინახოთ.
 
-## "yield" is a two-way street
+## "yield" არის ორმხრივი ქუჩა
 
-Until this moment, generators were similar to iterable objects, with a special syntax to generate values. But in fact they are much more powerful and flexible.
+ამ მომენტამდე, გენერატორები დაახლოებით იგივეა რაც იტერირებადი ობიექტები, სპეციაულური სინტაქსით მნიშვნელობის დასაგენერირებლად. მაგრამ სინამდვილეში, გენერატორები უფრო მძლავრები და მოქნილები არიან.
 
-That's because `yield` is a two-way street: it not only returns the result to the outside, but also can pass the value inside the generator.
+`yield` არის "ორმხრივი ქუჩა": ის არამარტო უბრუნებს მნიშვნელობას გამომძახებელს, არამედ გადასცემს გამომძახებლის მნიშვნელობას გენერატორს.
 
-To do so, we should call `generator.next(arg)`, with an argument. That argument becomes the result of `yield`.
+ამისათვის საჭიროა გამოვიძახოთ `generator.next(arg)`. `arg` გახდება `yield`-ის შედეგი.
 
-Let's see an example:
+მაგალითად:
 
 ```js run
 function* gen() {
 *!*
-  // Pass a question to the outer code and wait for an answer
+  // გადავცეთ კითვის ნიშანი გამომძახებელს და დაველოდოთ პასუხს
   let result = yield "2 + 2 = ?"; // (*)
 */!*
 
@@ -336,29 +342,29 @@ function* gen() {
 
 let generator = gen();
 
-let question = generator.next().value; // <-- yield returns the value
+let question = generator.next().value; // <-- yield აბრუნებს მნიშვნელობას
 
-generator.next(4); // --> pass the result into the generator  
+generator.next(4); // --> გადავცეთ მნიშვნელობა გენერატორს
 ```
 
 ![](genYield2.svg)
 
-1. The first call `generator.next()` should be always made without an argument (the argument is ignored if passed). It starts the execution and returns the result of the first `yield "2+2=?"`. At this point the generator pauses the execution, while staying on the line `(*)`.
-2. Then, as shown at the picture above, the result of `yield` gets into the `question` variable in the calling code.
-3. On `generator.next(4)`, the generator resumes, and `4` gets in as the result: `let result = 4`.
+1. `generator.next()`-ის პირველი გამოძახება ყოველთვის არგუმენტის გარეშეა (არგუმენტი დაიგნორდება თუ გადავცემთ). კოდის გაშვების შემდეგ აბრუნებს პირველ მნიშვნელობას `yield "2+2=?"`. ამ დროისთვის გენერატორის კოდი პაუზდება `(*)` ხაზზე.
+2. შემდეგ, როგორც სურათზე ჩანს, `yield`-ის მნიშვნელობას ვანიჭებთ `question` ცვლადს.
+3. და ბოლოს, `generator.next(4)`, გენერატორი აგრძელებს კოდის გაშვებას, და `4` იქნება `result`-ის საბოლოო მნიშვნელობა: `let result = 4`.
 
-Please note, the outer code does not have to immediately call `next(4)`. It may take time. That's not a problem: the generator will wait.
+არაა სავალდებულო, რომ `next(4)` ეგრევე გამოვიძახოთ. რა დროც არ უნდა დაჭირდეს, გენერატორი დაელოდება.
 
-For instance:
+მაგალითად:
 
 ```js
-// resume the generator after some time
+// განაახლე გენერატორი გარკვეული დროის შემდეგ
 setTimeout(() => generator.next(4), 1000);
 ```
 
-As we can see, unlike regular functions, a generator and the calling code can exchange results by passing values in `next/yield`.
+როგორც ხედავთ, ჩვეულებრივი ფუნქციისგან განსხვავებით, გენერატორსა და გამომძახებელს ერთმანეთში შეუძლიათ მნიშვნელობების გაცვლა `next/yield`-ის გამოყენებით.
 
-To make things more obvious, here's another example, with more calls:
+უკეთ რომ გავიგოთ, განვიხილოთ კიდევ ერთი მაგალითი:
 
 ```js run
 function* gen() {
@@ -366,50 +372,50 @@ function* gen() {
 
   alert(ask1); // 4
 
-  let ask2 = yield "3 * 3 = ?"
+  let ask2 = yield "3 * 3 = ?";
 
   alert(ask2); // 9
 }
 
 let generator = gen();
 
-alert( generator.next().value ); // "2 + 2 = ?"
+alert(generator.next().value); // "2 + 2 = ?"
 
-alert( generator.next(4).value ); // "3 * 3 = ?"
+alert(generator.next(4).value); // "3 * 3 = ?"
 
-alert( generator.next(9).done ); // true
+alert(generator.next(9).done); // true
 ```
 
-The execution picture:
+კოდის მოქმედების სურათი:
 
 ![](genYield2-2.svg)
 
-1. The first `.next()` starts the execution... It reaches the first `yield`.
-2. The result is returned to the outer code.
-3. The second `.next(4)` passes `4` back to the generator as the result of the first `yield`, and resumes the execution.
-4. ...It reaches the second `yield`, that becomes the result of the generator call.
-5. The third `next(9)` passes `9` into the generator as the result of the second `yield` and resumes the execution that reaches the end of the function, so `done: true`.
+1. პირველი `.next()` იწყებს გაშვებას... ის აღწევს პირველ `yield`.
+2. შედეგი უბრუნდება გამომძახებელს.
+3. მეორე `.next(4)` გადასცემს `4`-ს როგორც პირველი `yield`-ის მნიშვნელობას და განაგრძობს კოდის გაშვებას.
+4. ...აღწევს მეორე `yield`-ს, რომელიც დაბრუნებული მნიშვნელობა იქნება.
+5. მესამე  `.next(9)` გადასცემს `9`-ს როგორც მეორე `yield`-ის მნიშვნელობას და განაგრძობს კოდის გაშვებას, აღწევს ფუნქციის ბოლოში, და შესაბამისად `done: true`. 
 
-It's like a "ping-pong" game. Each `next(value)` (excluding the first one) passes a value into the generator, that becomes the result of the current `yield`, and then gets back the result of the next `yield`.
+"პინგ-პონგივითაა". `next(value)`-ის თითოეული გამოძახება (პირველის გარდა) გადასცემს მნიშვნელობას გენერატორს, რომელიც გახდება ახლანდელი `yield`-ის მნიშვნელობა, და აბრუნებს შემდეგი `yield`-ის მნიშვნელობას.
 
 ## generator.throw
 
-As we observed in the examples above, the outer code may pass a value into the generator, as the result of `yield`.
+როგორც ხედავთ, გამომძახებელს შეუძლია გადასცეს მნიშვნელობა გენერატორს, როგორც `yield`-ის მნიშვნელობა.
 
-...But it can also initiate (throw) an error there. That's natural, as an error is a kind of result.
+...მაგრამ ჩვენ ასევე შეგვიძლია "შევქმნათ" (ვისროლოთ, გამოვაგდოთ) ერორი, როგორც მნიშვნელობა. ეს შესაძლებელია, რადგან ერორი რაღაც არსით შედეგია.
 
-To pass an error into a `yield`, we should call `generator.throw(err)`. In that case, the `err` is thrown in the line with that `yield`.
+იმისათვის რომ ერორი გადავცეთ `yield`-ს, საჭიროა გამოვიძახოთ `generator.throw(err)`. ამ შემთხვევაში, `err`-ს გამოაგდებს იმ ხაზზე სადაც `yield`-ია.
 
-For instance, here the yield of `"2 + 2 = ?"` leads to an error:
+მაგალითად, ამ შემთხვევაში გვაქვს ერორი:
 
 ```js run
 function* gen() {
   try {
     let result = yield "2 + 2 = ?"; // (1)
 
-    alert("The execution does not reach here, because the exception is thrown above");
+    alert("კოდი აქამდე ვერ მიაღწევს, რადგან მანამდე ექსეფშენი გამოვარდება");
   } catch(e) {
-    alert(e); // shows the error
+    alert(e); // გვიჩვენებს ერორს
   }
 }
 
@@ -418,19 +424,19 @@ let generator = gen();
 let question = generator.next().value;
 
 *!*
-generator.throw(new Error("The answer is not found in my database")); // (2)
+generator.throw(new Error("ო, ღმერთო ჩემო.")); // (2)
 */!*
 ```
 
-The error, thrown into the generator at line `(2)` leads to an exception in line `(1)` with `yield`. In the example above, `try..catch` catches it and shows it.
+ერორი, რომელიც მეორე `(2)` ხაზზე, გენერატორში, ვისროლეთ, გამოიწვევს ექსეფშენს პირველ `(1)` ხაზზე, სადაც `yield`-ია. ზემო მაგალითში, `try..catch` დაიჭერს მაგ ექსეფშენს და გვაჩვენებს.
 
-If we don't catch it, then just like any exception, it "falls out" the generator into the calling code.
+თუ არ დავიჭერთ, მაშინ, როგორც სხვა ექსეფშენი, "ამოვარდება" გენერატორის კოდიდან და კოდს დაგვიქრაშავს.
 
-The current line of the calling code is the line with `generator.throw`, labelled as `(2)`. So we can catch it here, like this:
+თუ არადა, შეგვიძლია "ჩვენით" დავიჭიროთ ექსეფშენი.
 
 ```js run
 function* generate() {
-  let result = yield "2 + 2 = ?"; // Error in this line
+  let result = yield "2 + 2 = ?"; // აქ ერორი გვაქვს
 }
 
 let generator = generate();
@@ -439,23 +445,23 @@ let question = generator.next().value;
 
 *!*
 try {
-  generator.throw(new Error("The answer is not found in my database"));
+  generator.throw(new Error("ო, ღმერთო ჩემო."));
 } catch(e) {
-  alert(e); // shows the error
+  alert(e); // გვიჩვენებს ერორს
 }
 */!*
 ```
 
-If we don't catch the error there, then, as usual, it falls through to the outer calling code (if any) and, if uncaught, kills the script.
+და თუ აქაც არ დავიჭირეთ ერორი, მაშინ, იგივე სიტუაცია გვექნება და დაგვიქრაშავს კოდს.
 
-## Summary
+## შეჯამება
 
-- Generators are created by generator functions `function* f(…) {…}`.
-- Inside generators (only) there exists a `yield` operator.
-- The outer code and the generator may exchange results via `next/yield` calls.
+- გენერატორები იქმნება გენერატორი ფუნქციებით `function* f(…) {…}`.
+- (მხოლოდ) გენერატორის შიგნით არსებობს `yield` ოპერატორი.
+- გამომძახებელსა და გენერატორს შეუძლიათ მნიშვნელობების გაცვლა `next/yield`-ის გამოყენებით.
 
-In modern JavaScript, generators are rarely used. But sometimes they come in handy, because the ability of a function to exchange data with the calling code during the execution is quite unique. And, surely, they are great for making iterable objects.
+თანამედროვე ჯავასკრიპტში, გენერატორებს იშვიათად შევხდებით. მაგრამ ზოგჯერ გამოსადეგია, რადგან ფუნქციის უნარი - გაცვალოს მონაცამები გამომძახებელთან კოდის გაშვების დროს, იშვიათია. და რა თქმა უნდა, იტერირებადი ობიექტების შესაქმნელად კარგი ვარიანტია.
 
-Also, in the next chapter we'll learn async generators, which are used to read streams of asynchronously generated data (e.g paginated fetches over a network) in `for await ... of` loops.
+შემდეგ თავში, ჩვენ ვისწავლით `async` გენერატორებს, რომლებიც გამოიყენება ასინქრონულად დაგენერირებული მონაცემების სტრიმების წასაკითხად (მაგალითად, paginated fetches over a network) `for await ... of` ციკლში.
 
-In web-programming we often work with streamed data, so that's another very important use case.
+ვებ-პროგრამირებაში ჩვენ ხშირად ვმოქმედებთ სტრიმებთან, და შესაბამისად, გენერატორების გამოყენების კიდევ ერთი არედ ითვლება.
