@@ -1,69 +1,68 @@
-# Blob
+# ბლობი
 
-`ArrayBuffer` and views are a part of ECMA standard, a part of JavaScript.
+`ArrayBuffer` არის ECMA სტანდარტისა და შესაბამისად, ჯავასკრიპტის ნაწილი.
 
-In the browser, there are additional higher-level objects, described in [File API](https://www.w3.org/TR/FileAPI/), in particular `Blob`.
+ბრაუზერში კიდევ არის სხვა მაღალი-ლეველის ობიექტები, რომლებიც აღწერილნი არიან [ფაილის API-ში](https://www.w3.org/TR/FileAPI/), მაგალითად `Blob`.
 
-`Blob` consists of an optional string `type` (a MIME-type usually), plus `blobParts` -- a sequence of other `Blob` objects, strings and `BufferSource`.
+`Blob` შედგება ნებაყოფლობითი სტრინგ `type`-სგან (MIME-ტიპი ზოგადად), დამატებული ამას `blobParts` -- მიმდევრობა სხვა `Blob` ობიექტების, სტრინგებისა და `BufferSource`-ის.
 
 ![](blob.svg)
 
-The constructor syntax is:
+კონსტრუქტორის სინტაქსია ასეთია:
 
 ```js
 new Blob(blobParts, options);
 ```
 
-- **`blobParts`** is an array of `Blob`/`BufferSource`/`String` values.
-- **`options`** optional object:
-  - **`type`** -- `Blob` type, usually MIME-type, e.g. `image/png`,
-  - **`endings`** -- whether to transform end-of-line to make the `Blob` correspond to current OS newlines (`\r\n` or `\n`). By default `"transparent"` (do nothing), but also can be `"native"` (transform).
+- **`blobParts`** არის `Blob`/`BufferSource`/`String` მნიშვნელობების მასივი.
+- **`options`** ნებაყოფლობითი ობიექტი:
+  - **`type`** -- `Blob` ტიპი, ზოგადად MIME-ტიპი, მაგალითად `image/png`,
+  - **`endings`** -- გარდაქმნას თუ არა ხაზის ბოლო, რომ `Blob` შეუსაბამდეს მომუშავე ოპერაციული სისტემის ხაზის "დამასრულებლებს" (`\r\n` ან `\n`, newlines). დეფაულთად არის `"transparent"` (არაფერი გააკეთოს), მაგრამ ასევე შეიძლება იყოს `"native"` (გარდაქმნას).
 
-For example:
+მაგალითად:
 
 ```js
-// create Blob from a string
+// სტრინგისგან შექმენი Blob
 let blob = new Blob(["<html>…</html>"], {type: 'text/html'});
-// please note: the first argument must be an array [...]
+// დაიმახსოვრეთ: პირველი არგუმენტი არის მასივი [...]
 ```
 
 ```js
-// create Blob from a typed array and strings
-let hello = new Uint8Array([72, 101, 108, 108, 111]); // "Hello" in binary form
+// მასივისა (რომელსაც მითითებული აქვს ტიპი) და სტრინგებისგან შექმენი Blob
+let hello = new Uint8Array([72, 101, 108, 108, 111]); // "Hello" ბინარულ ფორმაში
 
 let blob = new Blob([hello, ' ', 'world'], {type: 'text/plain'});
 ```
 
-
-We can extract `Blob` slices with:
+ჩვენ შეგვიძლია დავითრიოთ `Blob` სლაისები (slices) შემდეგნაირად:
 
 ```js
 blob.slice([byteStart], [byteEnd], [contentType]);
 ```
 
-- **`byteStart`** -- the starting byte, by default 0.
-- **`byteEnd`** -- the last byte (exclusive, by default till the end).
-- **`contentType`** -- the `type` of the new blob, by default the same as the source.
+- **`byteStart`** -- საწყისი ბაიტი, დეფაულთად 0.
+- **`byteEnd`** -- ბოლო ბაიტი (არ ჩათვლით, დეფაულთად ბოლომდე).
+- **`contentType`** -- ახალი ბლობის `type`, დეფაულთად წყაროს მნიშვნელობა.
 
-The arguments are similar to `array.slice`, negative numbers are allowed too.
+არგუმენტები `array.slice`-ის მსგავსია, უარყოფითი რიცხვებიც მოსულა.
 
-```smart header="`Blob` objects are immutable"
-We can't change data directly in a `Blob`, but we can slice parts of a `Blob`, create new `Blob` objects from them, mix them into a new `Blob` and so on.
+```smart header="`Blob` ობიექტს ვერ შეცვლი (immutable)"
+`Blob`-ში მონაცემს პირდაპირ ვერ შევცვლით, მაგრამ შეგვიძლია `Blob`-ის სლაისი დავითრიოთ, ახალი `Blob` ობიექტი შევქმნათ მისგან, შევურიოთ ერთმანეთს და ა.შ.
 
-This behavior is similar to JavaScript strings: we can't change a character in a string, but we can make a new corrected string.
+ეს თვისება ჯავასკრიპტის სტრინგების მსგავსია: სტრინგში ქარაქტერს პირდაპირ ვერ შევცვლით, მაგრამ შეგვიძლია ახალი, "შესწორებული" სტრინგი შევქმნათ.
 ```
 
-## Blob as URL
+## ბლობი, როგორც URL
 
-A Blob can be easily used as a URL for `<a>`, `<img>` or other tags, to show its contents.
+ბლობი, შიგთავსის საჩვენებლად, შეგვიძლია გამოვიყენოთ როგორც URL `<a>`, `<img>` ან სხვა თაგებისთვის.
 
-Thanks to `type`, we can also download/upload `Blob` objects, and the `type` naturally becomes `Content-Type` in network requests.
+`type`-ის დახმარებით, ასევე შეგვიძლია ავტვირთოთ/ჩამოვტვირთოთ `Blob` ობიექტები, და `type` თავისით გარდაიქმნება `Content-Type`-ად ქსელის რექუესთებში.
 
-Let's start with a simple example. By clicking on a link you download a dynamically-generated `Blob` with `hello world` contents as a file:
+მოდი მარტივი მაგალითით დავიწყოთ. ლინკზე დაჭერისას დინამიურად დაგენერირებული `Blob` ფაილი, შიგთავსით `hello world`, ჩამოვტვირთოთ.
 
 ```html run
-<!-- download attribute forces the browser to download instead of navigating -->
-<a download="hello.txt" href='#' id="link">Download</a>
+<!-- download ატრიბუტი ბრაუზერს, ნავიგაციის მაგივრად, აიძულებს ჩამოტვირთვას -->
+<a download="hello.txt" href='#' id="link">ჩამოტვირთე</a>
 
 <script>
 let blob = new Blob(["Hello, world!"], {type: 'text/plain'});
@@ -72,9 +71,9 @@ link.href = URL.createObjectURL(blob);
 </script>
 ```
 
-We can also create a link dynamically in JavaScript and simulate a click by `link.click()`, then download starts automatically.
+ჩვენ ასევე შეგვიძლია, შევქმნათ ლინკი დინამიურად ჯავასკრიპტში და "დავაკლიკოთ" `link.click()`-ით, და შემდეგ ჩამოტვირთვა დაიწყება ავტომატურად.
 
-Here's the similar code that causes user to download the dynamically created `Blob`, without any HTML:
+განვიხილოთ დაახლოებით იგივე კოდი, რომელიც ჩამოტვირთავს დინამიურად შექმნილ `Blob`-ს, HTML-ის გარეშე:
 
 ```js run
 let link = document.createElement('a');
@@ -89,50 +88,49 @@ link.click();
 URL.revokeObjectURL(link.href);
 ```
 
-`URL.createObjectURL` takes a `Blob` and creates a unique URL for it, in the form `blob:<origin>/<uuid>`.
+`URL.createObjectURL` არგუმენტად იღებს `Blob`-ს და მისგან ქმნის უნიკალურ URL-ს, ფორმით `blob:<origin>/<uuid>`.
 
-That's what the value of `link.href` looks like:
+`link.href`-ის მნიშვნელობა ასე გამოიყურება:
 
 ```
 blob:https://javascript.info/1e67e00e-860d-40a5-89ae-6ab0cbee6273
 ```
 
-For each URL generated by `URL.createObjectURL` the browser stores a URL -> `Blob` mapping internally. So such URLs are short, but allow to access the `Blob`.
+`URL.createObjectURL`-ით დაგენერირებული თითოეული URL-თვის, ბრაუზერი ინახავს URL -> `Blolb` მაპინგს (mapping). ასე რომ, ასეთი URL არის მოკლე, მაგრამ `Blob`-თან დაკავშირების საშუალებას გვაძლევს.
 
-A generated URL (and hence the link with it) is only valid within the current document, while it's open. And it allows to reference the `Blob` in `<img>`, `<a>`, basically any other object that expects a URL.
+დაგენერირებული URL (და შესაბამისად, ლინკიც) ვალიდურია მხოლოდ ამჟამიდელ დოკუმენტისთვის, სანამ ღიაა და არსებობს. და `<img>`-ს, `<a>`-ს (და ნებისმიერ ობიექტს, რომელიც URL მოელის) თაგებს საშუალებას აძლევს მიაწოდოს `Blob`.
 
-There's a side-effect though. While there's a mapping for a `Blob`, the `Blob` itself resides in the memory. The browser can't free it.
+მაგრამ რაღაც მინუსი მაინცაა. მართალია, `Blob`-ზე "მიმთითებელი" გვაქვს, მაგრამ თვითონ `Blob` მეხსიერებაში რჩევა და ბრაუზერი თავისით ვერ ათავისუფლებს მაგ მეხსიერებას.
 
-The mapping is automatically cleared on document unload, so `Blob` objects are freed then. But if an app is long-living, then that doesn't happen soon.
+მიმთითებელი მაშინ გათავისუფლდება როდესაც დოკუმენტს "დავტოვებთ" (unload), და შესაბამისად, `Blob` ობიექტებიც მაშინ გათავისუფლდებიან. მაგრამ თუ აპლიკაცია დიდი ხანი ცოცხლობს, მაშინ ცუდ პონტში ვართ.
 
-**So if we create a URL, that `Blob` will hang in memory, even if not needed any more.**
+**ანუ, თუ ჩვენ `Blob`-გან შევქმნით URL-ს, ეგ `Blob` მეხსიერებაში დარჩება, მიუხედავად იმისა რომ აღარ ვიყენებთ.**
 
-`URL.revokeObjectURL(url)` removes the reference from the internal mapping, thus allowing the `Blob` to be deleted (if there are no other references), and the memory to be freed.
+`URL.revokeObjectURL(url)` გვაძლევს იმის საშუალებას, გავაკეთოთ ზუსტად ის, რასაც ბრაუზერი აკეთებს, როდესაც დოკუმენტს დავტოვებთ.
 
-In the last example, we intend the `Blob` to be used only once, for instant downloading, so we call `URL.revokeObjectURL(link.href)` immediately.
+ბოლო მაგალითში, `Blob`-ს მხოლოდ ერთხელ ვიყენებთ, ჩამოსატვირთად, ასე რომ შეგვიძლია `URL.revokeObjectURL(link.href)` გამოვიძახოთ.
 
-In the previous example with the clickable HTML-link, we don't call `URL.revokeObjectURL(link.href)`, because that would make the `Blob` url invalid. After the revocation, as the mapping is removed, the URL doesn't work any more.
+ბოლოს წინა, დაკლიკებადი HTML-ლინკის, მაგალითში, არ ვიძახებთ `URL.revokeObjectURL(link.ref)`-ს, რადგან მაშინ `Blob` არავალიდური გახდება.
 
-## Blob to base64
+## ბლობის გარდაქმნა base64-ად
 
-An alternative to `URL.createObjectURL` is to convert a `Blob` into a base64-encoded string.
+`URL.createObjectURL`-ის მაგივრად, `Blob` შეგვიძლია გარდავქმნათ base64-encoded სტრინგად.
 
-That encoding represents binary data as a string of ultra-safe "readable" characters with ASCII-codes from 0 to 64. And what's more important -- we can use this encoding in "data-urls".
+ეგ კოდირება, ბინარულ მონაცემს წარმოადგენს როგორც სტრინგს, ულტრა-უსაფრთხო, "წაკითხვად" ASCII-კოდის ქარაქტერებად, 0-დან 64-მდე. ყველაზე მნიშვნელოვანი ისაა, რომ ეს კოდირება შეგვიძლია გამოვიყენოთ "მონაცემთა URL-ებში".
 
-A [data url](mdn:/http/Data_URIs) has the form `data:[<mediatype>][;base64],<data>`. We can use such urls everywhere, on par with "regular" urls.
+[მონაცემთა URL](mdn:/http/Data_URIs)-ს აქვს `data:[<mediatype>][;base64],<data>` ფორმა. ასეთი URL-ები ნებისმიერ ადგილას შეგვიძლია გამოვიყენოთ, "ჩვეულებრივ" URL-თან ერთად.
 
-For instance, here's a smiley:
+მაგალითად, სმაილი:
 
 ```html
 <img src="data:image/png;base64,R0lGODlhDAAMAKIFAF5LAP/zxAAAANyuAP/gaP///wAAAAAAACH5BAEAAAUALAAAAAAMAAwAAAMlWLPcGjDKFYi9lxKBOaGcF35DhWHamZUW0K4mAbiwWtuf0uxFAgA7">
 ```
 
-The browser will decode the string and show the image: <img src="data:image/png;base64,R0lGODlhDAAMAKIFAF5LAP/zxAAAANyuAP/gaP///wAAAAAAACH5BAEAAAUALAAAAAAMAAwAAAMlWLPcGjDKFYi9lxKBOaGcF35DhWHamZUW0K4mAbiwWtuf0uxFAgA7">
+ბრაუზერის დაადეკოდირებს სტრინგს და მოგვცვემს იმიჯს: <img src="data:image/png;base64,R0lGODlhDAAMAKIFAF5LAP/zxAAAANyuAP/gaP///wAAAAAAACH5BAEAAAUALAAAAAAMAAwAAAMlWLPcGjDKFYi9lxKBOaGcF35DhWHamZUW0K4mAbiwWtuf0uxFAgA7">
 
+`Blob` base64-ად რომ გარდავქმნათ, გამოვიყენებთ ჩაშენებულ `FileReader` ობიექტს. მას ბლობიდან მონაცემის წაკითხვა რამდენიმე ფორმატში შეუძლია. [შემდეგ თავში](info:file) უფრო დეტალურად ვისაუბრებთ.
 
-To transform a `Blob` into base64, we'll use the built-in `FileReader` object. It can read data from Blobs in multiple formats. In the [next chapter](info:file) we'll cover it more in-depth.
-
-Here's the demo of downloading a blob, now via base-64:
+განვიხილოთ ბლობის ჩამოტვირთვის მაგალითი, ამჯერად base-64-ით:
 
 ```js run
 let link = document.createElement('a');
@@ -142,79 +140,79 @@ let blob = new Blob(['Hello, world!'], {type: 'text/plain'});
 
 *!*
 let reader = new FileReader();
-reader.readAsDataURL(blob); // converts the blob to base64 and calls onload
+reader.readAsDataURL(blob); // გარდაქმნის ბლობს base64-ად და იძახებს onload-ს
 */!*
 
 reader.onload = function() {
-  link.href = reader.result; // data url
+  link.href = reader.result; // მონაცემის URL
   link.click();
 };
 ```
 
-Both ways of making a URL of a `Blob` are usable. But usually `URL.createObjectURL(blob)` is simpler and faster.
+`Blob`-დან URL-ის შექმნის ორივე საშუალება მისაღებია. მაგრამ ზოგადად `URL.createObjectURL(blob)` უფრო მარტივი და სწრაფია. 
 
-```compare title-plus="URL.createObjectURL(blob)" title-minus="Blob to data url"
-+ We need to revoke them if care about memory.
-+ Direct access to blob, no "encoding/decoding"
-- No need to revoke anything.
-- Performance and memory losses on big `Blob` objects for encoding.
+```compare title-plus="URL.createObjectURL(blob)" title-minus="Blob-ის გარდაქმნა მონაცემის URL-ად"
++ ჩვენით უნდა გავათავისუფლოთ მეხსიერება.
++ ბლობზე პირდაპირი წვდომა, არავითარი "კოდირება/დეკოდირება"
+- არაფრის გათავისუფლდება არაა საჭირო.
+- სისწრაფესა და მეხსიერება დაიკარგება თუ `Blob` ობიექტი ძალიან დიდია.
 ```
 
-## Image to blob
+## იმიჯის გარდაქმნა ბლობად
 
-We can create a `Blob` of an image, an image part, or even make a page screenshot. That's handy to upload it somewhere.
+ჩვენ შეგვიძლია იმიჯის, იმიჯის ნაწილის, ან მთლიანი გვერდის სკრინშოთის `Blob` შევქმნათ. საკაიფოა, თუ სადმე ატვირთვა გვსურს.
 
-Image operations are done via `<canvas>` element:
+იმიჯის ოპერაციები სრულდება `<canvas>` ელემენტით:
 
-1. Draw an image (or its part) on canvas using [canvas.drawImage](mdn:/api/CanvasRenderingContext2D/drawImage).
-2. Call canvas method [.toBlob(callback, format, quality)](mdn:/api/HTMLCanvasElement/toBlob) that creates a `Blob` and runs `callback` with it when done.
+1. დახატე იმიჯი (ან მისი ნაწილი) კანვასზე [canvas.drawImage](mdn:/api/CanvasRenderingContext2D/drawImage)-ის გამოყენებით.
+2. გამოიძახე კანვასის მეთოდი [.toBlob(callback, format, quality)](mdn:/api/HTMLCanvasElement/toBlob), რომელიც ქმნის `Blob`-ს და დასრულებისას იძახებს `callback`-ს.
 
-In the example below, an image is just copied, but we could cut from it, or transform it on canvas prior to making a blob:
+ქვემო მაგალითში იმიჯს უბრალდო ვაკოპირებთ, მაგრამ რასაც გვინდა იმას ვუზამთ, სანამ კანვასზე გადავიტანთ და `Blob`-ად გარდავქმნით:
 
 ```js run
-// take any image
+// დავითრიოთ იმიჯი
 let img = document.querySelector('img');
 
-// make <canvas> of the same size
+// შევქმნათ იმავე ზომის <canvas>
 let canvas = document.createElement('canvas');
 canvas.width = img.clientWidth;
 canvas.height = img.clientHeight;
 
 let context = canvas.getContext('2d');
 
-// copy image to it (this method allows to cut image)
+// ვაჭამოთ იმიჯი (ეს მეთოდი სურათის ჩამოჭრის საშუალებას გვაძლევს)
 context.drawImage(img, 0, 0);
-// we can context.rotate(), and do many other things on canvas
+// ჩვენ შეგვიძლია, context.rotate() (შემობრუნება), და ბევრი სხვა რამე გავაკეთოთ კანვასზე.
 
-// toBlob is async operation, callback is called when done
+// toBlob არის ასინქრონული ოპერაცია, როდესაც მორჩება, გამოიძახება callback
 canvas.toBlob(function(blob) {
-  // blob ready, download it
+  // ბლობი მზადაა, ჩამოტვირთე
   let link = document.createElement('a');
   link.download = 'example.png';
 
   link.href = URL.createObjectURL(blob);
   link.click();
 
-  // delete the internal blob reference, to let the browser clear memory from it
+  // წაშალე ბლობზე მიმთითებელი, რომ ბრაუზერს მივცეთ მეხსიერების გასუფთავების საშუალება
   URL.revokeObjectURL(link.href);
 }, 'image/png');
 ```
 
-If we prefer `async/await` instead of callbacks:
+თუ `async/await` გვირჩევნია callback-ების მაგივრად:
 ```js
 let blob = await new Promise(resolve => canvasElem.toBlob(resolve, 'image/png'));
 ```
 
-For screenshotting a page, we can use a library such as <https://github.com/niklasvh/html2canvas>. What it does is just walks the page and draws it on `<canvas>`. Then we can get a `Blob` of it the same way as above.
+გვერდის დასასკრინშოთებლად, შეგვიძლია გამოვიყენოთ ბიბლიოთეკა როგორიცაა <https://github.com/niklasvh/html2canvas>. შემდეგ შეგვიძლია `Blob` წინა მაგალითისნაირად დავითრიოთ.
 
-## From Blob to ArrayBuffer
+## ბლობიდან ArrayBuffer-მდე
 
-The `Blob` constructor allows to create a blob from almost anything, including any `BufferSource`.
+`Blob` კონსტრუქტორი საშუალებას გვაძლევს შევქმნათ ბლობი (თითქმის) ნებისმიერი რამისგან, `BufferSource`-ის ჩათვლით.
 
-But if we need to perform low-level processing, we can get the lowest-level `ArrayBuffer` from it using `FileReader`:
+მაგრამ თუ გვინდა უფრო დაბალ-დონეზე დამუშავება, შეგვიძლია უფრო ლოუ-ლეველის `FileReader`-ის `ArrayBuffer` გამოვიყენოთ.
 
 ```js
-// get arrayBuffer from blob
+// დაითრიე ArrayBuffer ბლობიდან
 let fileReader = new FileReader();
 
 *!*
@@ -227,15 +225,15 @@ fileReader.onload = function(event) {
 ```
 
 
-## Summary
+## შეჯამება
 
-While `ArrayBuffer`, `Uint8Array` and other `BufferSource` are "binary data", a [Blob](https://www.w3.org/TR/FileAPI/#dfn-Blob) represents "binary data with type".
+`ArrayBuffer`, `Uint8Array` და სხვა `BufferSource`-ები არიან "ბინარული მონაცემები", ხოლო [ბლობი](https://www.w3.org/TR/FileAPI/#dfn-Blob) "ბინარული მონაცემი ტიპით".
 
-That makes Blobs convenient for upload/download operations, that are so common in the browser.
+ამიტომაც, ის გამოსადეგია ატვირთვა/ჩამოტვირთის ოპერაციებისთვის.
 
-Methods that perform web-requests, such as [XMLHttpRequest](info:xmlhttprequest), [fetch](info:fetch) and so on, can work with `Blob` natively, as well as with other binary types.
+მეთოდებს, რომლებიც ვებ-რექუესთებს აგზავნიან, როგორიცაა [XMLHttpRequest](info:xmlhttprequest), [fetch](info:fetch) და ა.შ., შეუძლიათ `Blob`-თან მუშაობა, ისევე როგორც სხვა ბინარულ ტიპებთან.
 
-We can easily convert between `Blob` and low-level binary data types:
+ჩვენ მარტივად შეგვიძლია გარდავქმნათ `Blob` და დაბალი-დონის ბინარული მონაცემთა ტიპები ერთმანეთში:
 
-- We can make a Blob from a typed array using `new Blob(...)` constructor.
-- We can get back `ArrayBuffer` from a Blob using `FileReader`, and then create a view over it for low-level binary processing.
+- `new Blob(...)` კონსტრუქტორის გამოყენებით "typed" მასივისგან შეგვიძლია შევქმნათ `Blob`.
+- შეგვიძლია უკან დავიბრუნოთ `ArrayBuffer` `Blob`-გან, `FileReader`-ის გამოყენებით.
