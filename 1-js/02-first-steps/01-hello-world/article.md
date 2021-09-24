@@ -1,17 +1,17 @@
-# Hello, world!
+# გამარჯობა სამყარო
 
-This part of the tutorial is about core JavaScript, the language itself.
+"ტუტორიალი"-ს ეს ნაწილი არის JavaScript-ის "ბირთვზე", თვითონ ენაზე ფოკუსირებული
 
-But we need a working environment to run our scripts and, since this book is online, the browser is a good choice. We'll keep the amount of browser-specific commands (like `alert`) to a minimum so that you don't spend time on them if you plan to concentrate on another environment (like Node.js). We'll focus on JavaScript in the browser in the [next part](/ui) of the tutorial.
+ჩვენ გვჭირდება სამუშაო გარემო რათა ჩვენი კოდი გავუშვათ, რადგანაც ეს წიგნი ონლაინ არის ბრაუზერი კარგი არჩევანია. ჩვენ შევეცდებით რომ ბრაუზერის სპეციფიკური "ბრძანებები" (მაგ: `alert`)) მინიმუმამდე დავიყვანოთ, იმისთვის რომ შენ მათზე დრო არ დახარჯო თუ შენ სხვა გარემოზე (მაგ: Node.js) გინდა ფოკუსირება. ჩვენ ფოკუსირებას ბრაუზერში JavaScript-ზე  [შემდეგ ნაწილში](/ui) ნაწილში მოვახდენთ.
 
-So first, let's see how we attach a script to a webpage. For server-side environments (like Node.js), you can execute the script with a command like `"node my.js"`.
+დავიწყოთ იმითი  თუ როგორ უნდა გავუშვათ კოდი ბრაუზერში, სერვერული მხარის გარემოში (მაგ: Node.js), შენ შეგიძლია კოდის გაშვება ბრძანებით რომელიც ასე გამოიყურება `"node my.js"`.
 
 
-## The "script" tag
+##  "script" თაგი
 
-JavaScript programs can be inserted almost anywhere into an HTML document using the `<script>` tag.
+JavaScript-ის პროგრამების ჩასმა HTML დოკუმენტში შეგვიძლია ნებისმიერ ადგილზე `<script>` თაგის გამოყენებით.
 
-For instance:
+მაგალითად:
 
 ```html run height=100
 <!DOCTYPE HTML>
@@ -19,7 +19,7 @@ For instance:
 
 <body>
 
-  <p>Before the script...</p>
+  <p>"script"-ამდე</p>
 
 *!*
   <script>
@@ -27,7 +27,7 @@ For instance:
   </script>
 */!*
 
-  <p>...After the script.</p>
+  <p>"script"-ის შემდეგ</p>
 
 </body>
 
@@ -35,24 +35,23 @@ For instance:
 ```
 
 ```online
-You can run the example by clicking the "Play" button in the right-top corner of the box above.
+მაგალითის გაშვება შეგიძლია "play"-ღილაკის დაჭერით ზემოთ  "ყუთის" ზედა მარჯვენა კუთხეში
 ```
 
-The `<script>` tag contains JavaScript code which is automatically executed when the browser processes the tag.
+`<script>`თაგი შეიცავს JavaScript-ის კოდს რომელიც თავისით სრულდება როცა ბრაუზერი კითხულობს თაგს
 
 
-## Modern markup
+## თანამედროვე მარკირება
 
-The `<script>` tag has a few attributes that are rarely used nowadays but can still be found in old code:
+`<script>`თაბს აქვს რამოდენიმე ატრიბუტი რომლებიც იშვიათად გამოიყენება დღესდღეობით მაგრამ შეიძლება ძველ კოდებში შეგვხვდეს:
 
-The `type` attribute: <code>&lt;script <u>type</u>=...&gt;</code>
-: The old HTML standard, HTML4, required a script to have a `type`. Usually it was `type="text/javascript"`. It's not required anymore. Also, the modern HTML standard totally changed the meaning of this attribute. Now, it can be used for JavaScript modules. But that's an advanced topic, we'll talk about modules in another part of the tutorial.
+`type`ატრიბუტი: <code>&lt;script <u>type</u>=...&gt;</code>: ძველი HTML-ის სტანდარტში HTML4-ში "script"-თაგში საჭირო იყო რომ `type` გამოგვეყენებინა, უმეტესწილად ის იყო `type="text/javascript"`, ახლა ეს აღარ არის საჭორო, თანამედროვე HTML-მა საერთოდ შეცვალა ამ ატრიბუტის მნიშვნელობა. ახლა ის გამოიყენება JavaScript-ის მოდულებში, მაგრამ ეს რთული თემაა რაზეც ამ "ტუტორიალი"-ს სხვა ნაწილში ვისაუბრებთ.
 
-The `language` attribute: <code>&lt;script <u>language</u>=...&gt;</code>
-: This attribute was meant to show the language of the script. This attribute no longer makes sense because JavaScript is the default language. There is no need to use it.
+`language` ატრიბუტი: <code>&lt;script <u>language</u>=...&gt;</code>
+: ეს ატრიბუტი გამიყენებოდა script-თაგში გამოყენებული ენის მითითებისთვის, მაგრამ დღესდღეობით JavaScript-ი ნაგულისხმევი ენაა ასერომ ამ ატრიბუტის გამოყენება არ არის საჭირო.
 
-Comments before and after scripts.
-: In really ancient books and guides, you may find comments inside `<script>` tags, like this:
+კომენტარები script-ამდე და script-ის შემდეგ.
+:ძალიან ძველი წიგნებში შენ შეიძლება იპოვო კომენტარები `<script>` თაგში, მაგალითად
 
     ```html no-beautify
     <script type="text/javascript"><!--
@@ -60,28 +59,29 @@ Comments before and after scripts.
     //--></script>
     ```
 
-    This trick isn't used in modern JavaScript. These comments hide JavaScript code from old browsers that didn't know how to process the `<script>` tag. Since browsers released in the last 15 years don't have this issue, this kind of comment can help you identify really old code.
+
+    ეს გზა აღარ გამოიყენება თანამედროვე JavaScript-ში, ეს კომენტარები მალავენ JavaScript-ის კოდს ძველი ბრაუზერებისგან რომლებმაც არ იცოდნენ როგორ "წაეკითხათ" `<script>` თაგი. რაგანაც ბოლო 15 წელიში გამოშვებულ ბრაუზერებს არ აქვთ ეს პრობლემა, ასეთი კომენტარით შენ შეგიძლია მიხვდე რომ კოდი ძალიან ძველია.
 
 
-## External scripts
+## გარეგანი კოდი
 
-If we have a lot of JavaScript code, we can put it into a separate file.
+თუ ჩვენ გვაქვს ბევრი JavaScript-ის კოდი ჩვენ შეგვიძლია კოდი სხვა ფაილში დავწეროთ.
 
-Script files are attached to HTML with the `src` attribute:
+კოდის ფაილი HTML ფაილზე მიმაგრებული არის `src` ატრიბუტით:
 
 ```html
 <script src="/path/to/script.js"></script>
 ```
 
-Here, `/path/to/script.js` is an absolute path to the script from the site root. One can also provide a relative path from the current page. For instance, `src="script.js"` would mean a file `"script.js"` in the current folder.
+აქ `/path/to/script.js` არის აბსოლუტური გზა საიტის "ფესვიდან" კოდის ფაილამდე. ჩვენ ასევე შეგვიძლია "ნათესავური" გზის მითითება ჩვენ ეს გზა შეგვიძლია ასე დავწეროთ: `src="script.js"` ეს იმას ნიშანვს რომ script.js არის იმავე საქაღალდეში.
 
-We can give a full URL as well. For instance:
+ჩვენ ასევე შეგვიძლია სრული ლინკის მითითება მაგალითად:
 
 ```html
 <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.11/lodash.js"></script>
 ```
 
-To attach several scripts, use multiple tags:
+იმისთვის რომ ჩვენ რამოდენიმე კოდის ფაილი მივამაგროთ ჩვენ უნდა გამოვიყენოთ რამოდენიმე script თაგი:
 
 ```html
 <script src="/js/script1.js"></script>
@@ -90,29 +90,29 @@ To attach several scripts, use multiple tags:
 ```
 
 ```smart
-As a rule, only the simplest scripts are put into HTML. More complex ones reside in separate files.
+როგორც წესი მარტო ადვილი კოდის არის თვითონ HTML-ში ჩაწერილი და უფრო რთული და დიდი კოდები ცალკე ფაილში იწერება.
 
-The benefit of a separate file is that the browser will download it and store it in its [cache](https://en.wikipedia.org/wiki/Web_cache).
+სხვა ფაილში კოდის დაწერის სარგებელი არის ის რომ ბრაუზერი მას იწერს და ინახავს [ქეშში](https://en.wikipedia.org/wiki/Web_cache).
 
-Other pages that reference the same script will take it from the cache instead of downloading it, so the file is actually downloaded only once.
+სხვა გვერდები რომელიც იგივე კოდის ფაილს იყენებს, ჩატვირთვისას ფაილს ქეშიდან ჩამოიწერენ, ასერომ ფაილი მარტო ერთხელ იწერება.
 
-That reduces traffic and makes pages faster.
+ეს რათქმაუნდა გვერდს ასწრაფებს.
 ```
 
-````warn header="If `src` is set, the script content is ignored."
-A single `<script>` tag can't have both the `src` attribute and code inside.
+````warn header="თუ `src`-ი მითითებულია, script-ის შინაარსი იგნორირებული იქნება."
+`<script>`თაგს არ შეიძლება ქონდეს ორივე `src` ატრიბუტი და კოდი შიგნით.
 
-This won't work:
+ეს არ იმუშავებს:
 
 ```html
 <script *!*src*/!*="file.js">
-  alert(1); // the content is ignored, because src is set
+  alert(1); // ეს ბრძენება იგნორირებული იქნება src ატრობუტის გამო
 </script>
 ```
 
-We must choose either an external `<script src="…">` or a regular `<script>` with code.
+ჩვენ უნდა ავირჩიოთ ან გარე `<script src="…">`  ან `<script>`-ში დაწერილი კოდი.
 
-The example above can be split into two scripts to work:
+ზედა მაგალითი შეიძლება გაიყოს ორ script თაგში იმისთვის რომ ორივემ იმუშავოს:
 
 ```html
 <script src="file.js"></script>
@@ -122,11 +122,11 @@ The example above can be split into two scripts to work:
 ```
 ````
 
-## Summary
+## შეჯამება
 
-- We can use a `<script>` tag to add JavaScript code to a page.
-- The `type` and `language` attributes are not required.
-- A script in an external file can be inserted with `<script src="path/to/script.js"></script>`.
+- ჩვენ შეგვიძლია `<script>` თაგი გამოვიყენოთ იმისთვის რომ JavaScript კოდი გვერდს დავუმატოთ.
+- `type` და `language`ატრიბუტები სავალდებულო არ არიან.
+- კოდი გარე ფაილში საიტში შეგვიძლია დავამატოთ `<script src="path/to/script.js"></script>`-ით .
 
 
-There is much more to learn about browser scripts and their interaction with the webpage. But let's keep in mind that this part of the tutorial is devoted to the JavaScript language, so we shouldn't distract ourselves with browser-specific implementations of it. We'll be using the browser as a way to run JavaScript, which is very convenient for online reading, but only one of many.
+კიდე ბევრი რამ არის სასწავლი კოდის და მისი ურთიერთქმედების ბრაუზერთან შესახებ.  მაგრამ მოდი გავიხსენოთ რომ ეს "ტუტორიალი" არის JavaScript-ის ენის შესახებ, და ჩვენ არ უნდა გადავიტანოთ ყურადღება ბრაუზერში იმპლიმენტაციის სპეციფიკურ გზებზე, ჩვენ გამოვიყენებთ ბრაზუერს JavaScript-ის კოდის გასაშვებათ, რაც ძალიან მოსახელთებელი გზა არის ონლაინ კითხვის დროს, მაგრამ რათქმაუნდა ერთადერთი არა.
