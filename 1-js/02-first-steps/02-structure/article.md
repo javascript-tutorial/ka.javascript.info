@@ -1,44 +1,44 @@
-# კოდის სტრუქტურა
+# Code structure
 
-დასაწყისში ჩვენ ვისაწვლით თუ როგორ უნდა ავაწყოთ კოდის "ბლოკები"e.
+The first thing we'll study is the building blocks of code.
 
-## დებულებები
+## Statements
 
-დებულებები არის სინტაქსური კონსტრუქციები და ბრძანებები რომლებიც რაიმე მოქმედებას ანხორციელებს.
+Statements are syntax constructs and commands that perform actions.
 
-ჩვენ უკვე ვნახეთ ერთი დებულება, `alert('Hello, world!')`, რომელიც აჩვენებდა ტექსტ "Hello, world!"-ს.
+We've already seen a statement, `alert('Hello, world!')`, which shows the message "Hello, world!".
 
-ჩვენ შეგვიძლია იმდენი დებულება გვქონდეს კოდიში რამდენიც გვიდა, დებულებების გამოყოფა შეგვიძლია წერტილ-მძიემეთი.
+We can have as many statements in our code as we want. Statements can be separated with a semicolon.
 
-მაგალითად, ეხლა ჩვენ ვყობთ "Hello World"-ს ორ alert-ში:
+For example, here we split "Hello World" into two alerts:
 
 ```js run no-beautify
 alert('Hello'); alert('World');
 ```
 
-როგორც წესი, სხვადასხვა დებულებები ცალ-ცალკე ხაზზე იწერება, იმისთვის რომ კოდი უფრო ადვილი წასაკითხი გახდეს:
+Usually, statements are written on separate lines to make the code more readable:
 
 ```js run no-beautify
 alert('Hello');
 alert('World');
 ```
 
-## წერტილ-მძიმე [#semicolon]
+## Semicolons [#semicolon]
 
-წერტილ მძიმე შეგვიძლია არ დავწეროთ იმ შემთხვევაში თუ დებულებებს ცალცალკე ხაზზე დავწერთ.
+A semicolon may be omitted in most cases when a line break exists.
 
-ესეც იმუშავებს:
+This would also work:
 
 ```js run no-beautify
 alert('Hello')
 alert('World')
 ```
 
-აქ JavaScript-ი ახალ ხაზზს აღიქვამს როგორც "ნაგულისხმევ" წერტილ-მძიმეს. ამას ქვია [წერტილ მძიმის ავტომატური ჩასმა](https://tc39.github.io/ecma262/#sec-automatic-semicolon-insertion).
+Here, JavaScript interprets the line break as an "implicit" semicolon. This is called an [automatic semicolon insertion](https://tc39.github.io/ecma262/#sec-automatic-semicolon-insertion).
 
-**უმეტესობა შეთხვევაში ახალი ხაზი გულისხმობს წერტილ-მძიმეს, მაგრამ "უმეტესობა შემთხვევაში" არ ნიშნავს "ყოველთვის"!**
+**In most cases, a newline implies a semicolon. But "in most cases" does not mean "always"!**
 
-არის შემთხვევები როდეს ახალი ხაზი არ ნიშნავს წერტილ-მძიმეს, მაგალითად:
+There are cases when a newline does not mean a semicolon. For example:
 
 ```js run no-beautify
 alert(3 +
@@ -46,14 +46,14 @@ alert(3 +
 + 2);
 ```
 
-კოდი აჩვენებს `6`-ს იმიტომ რომ JavaScript-ი არ ამატებს წერტილ-მძიმეს აქ, აშკარაა რომ თუ ხაზი მთავრდება `"+"`-ით მაშინ ეს არის "incomplete expression"-ი(დაუსრულებელი გამოხატულება), ასერომ წერტილ მძიმე იქ არასწორი იქნებოდა, ამ შემთხვევაში ყველაფერი როგორც წესი ისე მუშაობს.
+The code outputs `6` because JavaScript does not insert semicolons here. It is intuitively obvious that if the line ends with a plus `"+"`, then it is an "incomplete expression", so a semicolon there would be incorrect. And in this case, that works as intended.
 
-**არის შემთხვევები როდეს  JavaScript-ი არ სვამს წერტილ-მძიმეს იქ სადაც ის საიჭიროა.**
+**But there are situations where JavaScript "fails" to assume a semicolon where it is really needed.**
 
-შეცდომები რომლების ხდება ამის გამო ძალიან ძნელი საპოვნელია და გასასწორებელია.
+Errors which occur in such cases are quite hard to find and fix.
 
 ````smart header="An example of an error"
-თუ შენ გაინტერესებს ასეთი შეცდობის მაგალითი, ეს კოდი ნახე:
+If you're curious to see a concrete example of such an error, check this code out:
 
 ```js run
 alert("Hello");
@@ -61,9 +61,9 @@ alert("Hello");
 [1, 2].forEach(alert);
 ```
 
-ჯერჯერობით არ არის საჭირო რომ კვადრატულ ფრჩხილებზე `[]` და `forEach`-ზე იფიქროთ. ჩვენ მათ მოგვიანებით შევისწავლით. ამჯერად უბრალოდ დაიმახსოვრე რომ ამ კოდის გაშვებისას, კოდი აჩვენებს: `Hello`, მერე `1`-ს, და მერე `2`-ს.
+No need to think about the meaning of the brackets `[]` and `forEach` yet. We'll study them later. For now, just remember the result of running the code: it shows `Hello`, then `1`, then `2`.
 
-მოდი ეხლა `alert`-ის შემდეგ წავშალოთ წერტილ-მძიმე:
+Now let's remove the semicolon after the `alert`:
 
 ```js run no-beautify
 alert("Hello")
@@ -71,85 +71,85 @@ alert("Hello")
 [1, 2].forEach(alert);
 ```
 
-ამ და ზედა კოდის შორის განსხვავება მხოლოდ ერთი ნიშანია, წერტილ-მძიმე პირველი ხაზის ბოლოს წაშლილია.
+The difference compared to the code above is only one character: the semicolon at the end of the first line is gone.
 
-თუ შენ ამ კოდს გაუშვებ მარტო პირველი `Hello` გამოჩნდება(და შეცდომა არის მის სანახავათ შეიძლება console-ის გახსნა დაგჭირდეთ). რიცხვები აღარ არის.
+If we run this code, only the first `Hello` shows (and there's an error, you may need to open the console to see it). There are no numbers any more.
 
-ეს იმიტომ რომ JavaScript-ი წერტილ მძიმეს კვადრატული ფრჩხილების `[...]` წინ არ სვამს. ასერომ წინა კოდი ითვლება ერთ დებულებად.
+That's because JavaScript does not assume a semicolon before square brackets `[...]`. So, the code in the last example is treated as a single statement.
 
-კომპიუტერი ზედა კოდს ასე "ხედავს":
+Here's how the engine sees it:
 
 ```js run no-beautify
 alert("Hello")[1, 2].forEach(alert);
 ```
 
-უცნაურია, არაა? ასეთი შეერთება ამ შემთხვევაში უბრალოდ შეცდომმაა. ჩვენ `alert`-ის შემდეგ წერტილ მძიმე უნდა დავწეროთ იმისთვის რომ კოდმა იმუშავოს სწორად.
+Looks weird, right? Such merging in this case is just wrong. We need to put a semicolon after `alert` for the code to work correctly.
 
-ეს შეიძლება ასევე მოხდეს ამ სიტუაციაში.
+This can happen in other situations also.
 ````
 
-ჩვენ რეკომენდაციას მოგცემთ რომ წერტილ-მძიმე გამოყიენოთ იმ შემთხევავაშიც თუ დებულებები ახალი ხაზით არის გამოყოფილი, ამ წესს ბევრი დეველოპერი მიყვება, მოდი კიდე ერთხელ გავიმეოროთ -- *შეიძლება* რომ წერტილ-მძიმე უმეტესობა შემთხვევაში არ დავწეროთ მაგრამ უფრო უსაფრთხო იქნება თუ დავწერთ -- განსაკუთრებით დამწყებებისთვის.
+We recommend putting semicolons between statements even if they are separated by newlines. This rule is widely adopted by the community. Let's note once again -- *it is possible* to leave out semicolons most of the time. But it's safer -- especially for a beginner -- to use them.
 
-## კომენტარები [#code-comments]
+## Comments [#code-comments]
 
-რაც უფრო დრო გადის კოდი უფრო და უფრო კომპლექსური ხდება და ამის გამო *კომენტარების* გამოყენება საჭირო ხდება იმისთვის რომ ჩვენ ავხსნათ რას აკეთებს კოდი და რისთვის.
+As time goes on, programs become more and more complex. It becomes necessary to add *comments* which describe what the code does and why.
 
-კომენტარის დაწერა შეიძლება კოდის ნებისმიერ ნაწილში, ის ხელს არ უშლის კოდის იმის გამო რომ კომპიუტერი უბრალოდ აიგნორებს მათ.
+Comments can be put into any place of a script. They don't affect its execution because the engine simply ignores them.
 
-**ერთ ხაზიანი კომენტარი იწყება ორი წინ დახრილი ხაზით `//`.**
+**One-line comments start with two forward slash characters `//`.**
 
-ხაზის დანარჩენი ნაწილი კომენტარი იქნება. კომენტარი შეიძლება იყოს მთლიანი ხაზის სიგრძე ან დებულებას მოყვებოდეს.
+The rest of the line is a comment. It may occupy a full line of its own or follow a statement.
 
-მაგალითად:
+Like here:
 ```js run
-// ეს კომენტარი თავის საკუთარ ხაზზეა
+// This comment occupies a line of its own
 alert('Hello');
 
-alert('World'); // ეს კომენტარი დებულებას მოყვება
+alert('World'); // This comment follows the statement
 ```
 
-**მრავალხაზოვანი კომენტარები იწყება წინ დახრილი ხაზით და  ფიფქით <code>/&#42;</code> და მთავრდება ფიფქით და წინ დახრილი ხაზით <code>&#42;/</code>.**
+**Multiline comments start with a forward slash and an asterisk <code>/&#42;</code> and end with an asterisk and a forward slash <code>&#42;/</code>.**
 
-მაგალითად:
+Like this:
 
 ```js run
-/* მაგალით ორი შეტყობინებით.
-ეს კომენტარი მრავალ ხაზზიანია.
+/* An example with two messages.
+This is a multiline comment.
 */
 alert('Hello');
 alert('World');
 ```
 
-კომენტარის შინაარსი იგნორირდება, ეს იმას ნიშნავს რომ ჩვენ თუ ჩავწერთ კოდს <code>/&#42; ... &#42;/</code>-ში, ის არ იმუშავებს.
+The content of comments is ignored, so if we put code inside <code>/&#42; ... &#42;/</code>, it won't execute.
 
-ზოგიერთ შემთხევევაში ხელსაყრელია რომ კოდის რომელიმე ნაწილი დროებით გავაუქმოთ:
+Sometimes it can be handy to temporarily disable a part of code:
 
 ```js run
-/* კოდის კომენტარში ჩასმა
+/* Commenting out the code
 alert('Hello');
 */
 alert('World');
 ```
 
 ```smart header="Use hotkeys!"
-უმეტესობა ედითორებში(რედაქტორებში), კოდის ხაზის დაკომენტარება შეიძლება `key:Ctrl+/`-ით ერთ ხაზიანი კომენტარისთვის და `key:Ctrl+Shift+/`-- მრავალხაზზიანი კომენტარისთვის(აირჩიეთ კოდის ნაწილი და ამ ღილაკებს დააჭირეთ), "Mac"-ისთვის, ცადე `key:Cmd` `key:Ctrl`-ის მაგივრად და `key:Option`  `key:Shift`-ის მაგივრად.
+In most editors, a line of code can be commented out by pressing the `key:Ctrl+/` hotkey for a single-line comment and something like `key:Ctrl+Shift+/` -- for multiline comments (select a piece of code and press the hotkey). For Mac, try `key:Cmd` instead of `key:Ctrl` and `key:Option` instead of `key:Shift`.
 ```
 
 ````warn header="Nested comments are not supported!"
-არ შეიძლება რომ `/*...*/`-ში მეორე `/*...*/` იყოს.
+There may not be `/*...*/` inside another `/*...*/`.
 
-ესეთი კოდი შეცდობით "მოკვდება":
+Such code will die with an error:
 
 ```js run no-beautify
 /*
-  /* ჩაშენებული კომენტარი ?!? */
+  /* nested comment ?!? */
 */
 alert( 'World' );
 ```
 ````
 
-გთხოვთ თავი არ შეიკავოთ კოდის დაკომენტარებისგან.
+Please, don't hesitate to comment your code.
 
-კომენტარები კოდს ზომაში ზრდის მაგრამ ამ შემთხვევაში პრობლემა არ არის. არსებობს ბევრი "იარაღები"რომლებიც კოდის ზომას ამცირებს სანამ სერვერზე გავუშვებს, ეს იარაღები კომენტარებს შლიან, და ისინი არ ჩდებიან მომუშავე კოდში, ასერომ კომენტარებს არანარი უარყოფითი ეფექტი არ აქვს მომუშავე სერვერზე.
+Comments increase the overall code footprint, but that's not a problem at all. There are many tools which minify code before publishing to a production server. They remove comments, so they don't appear in the working scripts. Therefore, comments do not have negative effects on production at all.
 
-მოგვიანებით ამ ტუტორიალში იქნება თავი <info:code-quality> რომელშიც ვისაუბრებთ იმაზე თუ როგოტ უნდა დავწეროთ უკეთესი კომენტარები.
+Later in the tutorial there will be a chapter <info:code-quality> that also explains how to write better comments.
