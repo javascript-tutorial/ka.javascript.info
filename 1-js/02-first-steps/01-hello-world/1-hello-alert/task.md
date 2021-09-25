@@ -4,9 +4,9 @@ importance: 5
 
 # Show an alert
 
-Create a page that shows a message "I'm JavaScript!".
+გააკეთე გვერდი რომელიც წერს "I'm JavaScript!".
 
-Do it in a sandbox, or on your hard drive, doesn't matter, just ensure that it works.
+ეს გააკეთე თუ გინდა სანდბოქსში ან შენ კომპიუტერზე მნიშვნელობა არ აქვს უბრალოდ დარწმუნდი რომ მუშაობს
 
 [demo src="solution"]
 
