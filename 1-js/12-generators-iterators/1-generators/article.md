@@ -454,7 +454,33 @@ try {
 
 და თუ აქაც არ დავიჭირეთ ერორი, მაშინ, იგივე სიტუაცია გვექნება და დაგვიქრაშავს კოდს.
 
+<<<<<<< HEAD
 ## შეჯამება
+=======
+## generator.return
+
+`generator.return(value)` finishes the generator execution and return the given `value`.
+
+```js
+function* gen() {
+  yield 1;
+  yield 2;
+  yield 3;
+}
+
+const g = gen();
+
+g.next();        // { value: 1, done: false }
+g.return('foo'); // { value: "foo", done: true }
+g.next();        // { value: undefined, done: true }
+```
+
+If we again use `generator.return()` in a completed generator, it will return that value again ([MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Generator/return)).
+
+Often we don't use it, as most of time we want to get all returning values, but it can be useful when we want to stop generator in a specific condition.
+
+## Summary
+>>>>>>> 3699f73b4ccb2a57ac5ef990d2687bf31ccf564c
 
 - გენერატორები იქმნება გენერატორი ფუნქციებით `function* f(…) {…}`.
 - (მხოლოდ) გენერატორის შიგნით არსებობს `yield` ოპერატორი.
