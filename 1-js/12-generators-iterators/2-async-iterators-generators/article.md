@@ -377,7 +377,7 @@ async function* fetchCommits(repo) {
 
   for await (const commit of fetchCommits('javascript-tutorial/en.javascript.info')) {
 
-    console.log(commit.author.login);
+    console.log(commit.author.name);
 
     if (++count == 100) { // 100 კომიტზე გავჩერდეთ.
       break;
