@@ -1,4 +1,4 @@
-# Hello, world!
+# გამარჯობა, სამყაროვ!
 
 This part of the tutorial is about core JavaScript, the language itself.
 
