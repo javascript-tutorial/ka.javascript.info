@@ -2,8 +2,8 @@ importance: 5
 
 ---
 
-# Show an alert with an external script
+# გაფრთხილების ჩვენება გარე სკრიპტის გამოყენებით
 
-Take the solution of the previous task <info:task/hello-alert>. Modify it by extracting the script content into an external file `alert.js`, residing in the same folder.
+აიღეთ წინა დავალების (<info:task/hello-alert>) ამონახსნი და მოახდინეთ მასი ცვლილება. სკრიპტის შიგთავსი გაიტანეთ ცალკე `alert.js` ფაილში, რომელიც განთავსებულია იმავე საქაღალდეში. 
 
-Open the page, ensure that the alert works.
+გახსენით გვერდი, დარწმუნდით, რომ გაფრთხილება მუშაობს.
