@@ -2,11 +2,10 @@ importance: 5
 
 ---
 
-# Show an alert
+# გაფრთხილების ჩვენება
 
-Create a page that shows a message "I'm JavaScript!".
+შექმენით გვერდი, რომელიც აჩვენებს შეტყობინებას: „მე ვარ JavaScript-ი!“.
 
-Do it in a sandbox, or on your hard drive, doesn't matter, just ensure that it works.
+გააკეთეთ ეს sandbox-ში ან თქვენს მყარ დისკზე, არა აქვს მნიშვნელობა, უბრალოდ დარწმუნდით, რომ მუშაობს.
 
 [demo src="solution"]
-

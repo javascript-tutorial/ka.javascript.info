@@ -1,1 +1,1 @@
-alert("I'm JavaScript!");
+alert("მე ვარ JavaScript-ი!");
