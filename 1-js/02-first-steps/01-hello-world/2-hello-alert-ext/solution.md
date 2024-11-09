@@ -1,8 +1,7 @@
-The HTML code:
+HTML-კოდი:
 
 [html src="index.html"]
 
-For the file `alert.js` in the same folder:
+იმავე საქაღალდეში არსებული `alert.js` ფაილისთვის:
 
 [js src="alert.js"]
-
