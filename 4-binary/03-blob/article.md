@@ -100,7 +100,11 @@ blob:https://javascript.info/1e67e00e-860d-40a5-89ae-6ab0cbee6273
 
 დაგენერირებული URL (და შესაბამისად, ლინკიც) ვალიდურია მხოლოდ ამჟამიდელ დოკუმენტისთვის, სანამ ღიაა და არსებობს. და `<img>`-ს, `<a>`-ს (და ნებისმიერ ობიექტს, რომელიც URL მოელის) თაგებს საშუალებას აძლევს მიაწოდოს `Blob`.
 
+<<<<<<< HEAD
 მაგრამ რაღაც მინუსი მაინცაა. მართალია, `Blob`-ზე "მიმთითებელი" გვაქვს, მაგრამ თვითონ `Blob` მეხსიერებაში რჩევა და ბრაუზერი თავისით ვერ ათავისუფლებს მაგ მეხსიერებას.
+=======
+There's a side effect though. While there's a mapping for a `Blob`, the `Blob` itself resides in the memory. The browser can't free it.
+>>>>>>> 20208769e528337949e946f526534d61d38bac47
 
 მიმთითებელი მაშინ გათავისუფლდება როდესაც დოკუმენტს "დავტოვებთ" (unload), და შესაბამისად, `Blob` ობიექტებიც მაშინ გათავისუფლდებიან. მაგრამ თუ აპლიკაცია დიდი ხანი ცოცხლობს, მაშინ ცუდ პონტში ვართ.
 
@@ -209,21 +213,52 @@ let blob = await new Promise(resolve => canvasElem.toBlob(resolve, 'image/png'))
 
 `Blob` კონსტრუქტორი საშუალებას გვაძლევს შევქმნათ ბლობი (თითქმის) ნებისმიერი რამისგან, `BufferSource`-ის ჩათვლით.
 
+<<<<<<< HEAD
 მაგრამ თუ გვინდა უფრო დაბალ-დონეზე დამუშავება, შეგვიძლია უფრო ლოუ-ლეველის `FileReader`-ის `ArrayBuffer` გამოვიყენოთ.
 
 ```js
 // დაითრიე ArrayBuffer ბლობიდან
 let fileReader = new FileReader();
+=======
+But if we need to perform low-level processing, we can get the lowest-level `ArrayBuffer` from `blob.arrayBuffer()`:
 
-*!*
-fileReader.readAsArrayBuffer(blob);
-*/!*
+```js
+// get arrayBuffer from blob
+const bufferPromise = await blob.arrayBuffer();
+>>>>>>> 20208769e528337949e946f526534d61d38bac47
 
-fileReader.onload = function(event) {
-  let arrayBuffer = fileReader.result;
-};
+// or
+blob.arrayBuffer().then(buffer => /* process the ArrayBuffer */);
 ```
 
+## From Blob to stream
+
+When we read and write to a blob of more than `2 GB`, the use of `arrayBuffer` becomes more memory intensive for us. At this point, we can directly convert the blob to a stream.
+
+A stream is a special object that allows to read from it (or write into it) portion by portion. It's outside of our scope here, but here's an example, and you can read more at <https://developer.mozilla.org/en-US/docs/Web/API/Streams_API>. Streams are convenient for data that is suitable for processing piece-by-piece.
+
+The `Blob` interface's `stream()` method returns a `ReadableStream` which upon reading returns the data contained within the `Blob`.
+
+Then we can read from it, like this:
+
+```js
+// get readableStream from blob
+const readableStream = blob.stream();
+const stream = readableStream.getReader();
+
+while (true) {
+  // for each iteration: value is the next blob fragment
+  let { done, value } = await stream.read();
+  if (done) {
+    // no more data in the stream
+    console.log('all blob processed.');
+    break;
+  }
+
+   // do something with the data portion we've just read from the blob
+  console.log(value);
+}
+```
 
 ## შეჯამება
 
@@ -235,5 +270,12 @@ fileReader.onload = function(event) {
 
 ჩვენ მარტივად შეგვიძლია გარდავქმნათ `Blob` და დაბალი-დონის ბინარული მონაცემთა ტიპები ერთმანეთში:
 
+<<<<<<< HEAD
 - `new Blob(...)` კონსტრუქტორის გამოყენებით "typed" მასივისგან შეგვიძლია შევქმნათ `Blob`.
 - შეგვიძლია უკან დავიბრუნოთ `ArrayBuffer` `Blob`-გან, `FileReader`-ის გამოყენებით.
+=======
+- We can make a `Blob` from a typed array using `new Blob(...)` constructor.
+- We can get back `ArrayBuffer` from a Blob using `blob.arrayBuffer()`, and then create a view over it for low-level binary processing.
+
+Conversion streams are very useful when we need to handle large blob. You can easily create a `ReadableStream` from a blob. The `Blob` interface's `stream()` method returns a `ReadableStream` which upon reading returns the data contained within the blob.
+>>>>>>> 20208769e528337949e946f526534d61d38bac47
